@@ -19,3 +19,12 @@
 - 約 1 分で GitHub Pages が自動で有効になり、`https://shinpoyo.github.io/` が 200（トップページ表示）
 - 既存プロジェクト（mashimashida・keshikasu・mogumogu-camera・smudge-privacy）も引き続き 200、存在しないパスは自作の 404 ページ
 - DNS 確認：所有確認の TXT（`_github-pages-challenge-shinpoyo.shinpoyo.com`）は登録済み。A / AAAA / CNAME はまだ
+
+## 2026-10-11 広告（Google AdSense）の準備
+
+- 方針：AdSense を shinpoyo.com 単位で申し込む。場所はトップ・マシマシ打の食券購入下部・完飲番付・常連カード（結果画面はポップアップ内のため置かない）
+- `privacy/index.html`：プライバシーポリシーを新設（端末内保存のみ・広告 Cookie とオプトアウト・外部送信の一覧・免責・著作権・お問い合わせ）
+- `ads.js`：AdSense の ID を入れると作品一覧の下に広告枠を出す。空なら何もしない
+- トップのフッターにプライバシーポリシーへのリンク
+- 確認：ID 空 → 広告枠なし・外部読み込みなし／ダミー ID → 枠表示・読み込み 1 回、エラーなし。プライバシーポリシーはスマホ幅で横スクロールなし
+- 手順書 [adsense.md](adsense.md) を作成
