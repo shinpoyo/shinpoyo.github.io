@@ -12,3 +12,10 @@
 ## 2026-10-11 Cloudflare の入力方法を追記
 
 - Add record の各欄（Name / Content・IPv4 address・IPv6 address・Target / Proxy status）に何を入れるかを [custom-domain.md](custom-domain.md) に表で追記
+
+## 2026-10-11 GitHub に push・公開確認
+
+- ユーザーが `shinpoyo/shinpoyo.github.io`（public・空）を作成 → `main` に push
+- 約 1 分で GitHub Pages が自動で有効になり、`https://shinpoyo.github.io/` が 200（トップページ表示）
+- 既存プロジェクト（mashimashida・keshikasu・mogumogu-camera・smudge-privacy）も引き続き 200、存在しないパスは自作の 404 ページ
+- DNS 確認：所有確認の TXT（`_github-pages-challenge-shinpoyo.shinpoyo.com`）は登録済み。A / AAAA / CNAME はまだ
