@@ -1,6 +1,6 @@
 // Google AdSense の設定。審査に通ったら client（ca-pub-…）と slot（広告ユニット ID）を入れる。
 // 空のままなら広告は出ず、外部への読み込みも発生しない。
-const ADSENSE = { client: '', slot: '' };
+const ADSENSE = { client: '', slot: '' }; // client は ca-pub-3053925393924248（広告ユニット作成後に slot と一緒に入れる）
 
 if (ADSENSE.client && ADSENSE.slot) {
   document.querySelectorAll('[data-ad]').forEach((box) => {
