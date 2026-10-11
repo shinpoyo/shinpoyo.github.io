@@ -12,6 +12,20 @@
    - Cloudflare → shinpoyo.com → **DNS** → **Records** → **Add record** → Type `TXT`
 3. 数分待って GitHub に戻り **Verify**
 
+### Cloudflare の入力欄の対応（Add record の画面）
+
+| Type | Name 欄 | 値の欄（欄の名前） | Proxy status | TTL |
+|---|---|---|---|---|
+| TXT（所有確認） | `_github-pages-challenge-shinpoyo` | GitHub に表示された文字列（Content） | なし | Auto |
+| A | `@` | `185.199.108.153` など（IPv4 address） | DNS only | Auto |
+| AAAA | `@` | `2606:50c0:8000::153` など（IPv6 address） | DNS only | Auto |
+| CNAME | `www` | `shinpoyo.github.io`（Target） | DNS only | Auto |
+
+- Name の `@` はドメインそのもの（`shinpoyo.com`）の意味。保存後は一覧に `shinpoyo.com` と表示される
+- Name に `.shinpoyo.com` は付けない（自動で付く）
+- 1 回の Add record で入れられる値は 1 つ。A は 4 回、AAAA も 4 回繰り返す
+- A / AAAA / CNAME は最初オレンジの雲（Proxied）になっているので、クリックして灰色（DNS only）にしてから Save
+
 ## 2. Cloudflare の DNS レコード
 
 Cloudflare → shinpoyo.com → DNS → Records → Add record。**Proxy status はすべて「DNS only」（灰色の雲）**にする。
