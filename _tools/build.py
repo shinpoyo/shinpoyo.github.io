@@ -140,7 +140,7 @@ def main():
         print("wrote", out.relative_to(ROOT))
     urls.append(SITE + "privacy/")
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for u in sorted(set(urls)) + [SITE + "mashimashida/", SITE + "keshikasu/", SITE + "mogumogu-camera/"]:
+    for u in sorted(set(urls)) + [SITE + "mashimashida/", SITE + "keshikasu/"]:
         sitemap.append(f"  <url><loc>{u}</loc></url>")
     sitemap.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
