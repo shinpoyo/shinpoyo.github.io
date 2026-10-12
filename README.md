@@ -8,6 +8,7 @@ shinpoyo の個人サイト **https://shinpoyo.com/** 。各プロジェクト�
 |---|---|
 | `/` | トップ（作品一覧・お知らせ） |
 | `/works/` | 作品一覧と、作品ごとの紹介ページ（遊び方・FAQ など） |
+| `/articles/` | 記事（`_src` で `date:` を付けたページが自動で一覧に載る） |
 | `/about/` `/contact/` `/privacy/` | このサイトについて・お問い合わせ・プライバシーポリシー |
 | `assets/` | 共通 CSS（`site.css`）と画像 |
 | `ads.js` | 広告（AdSense）の設定。ID が空なら何も出さない |

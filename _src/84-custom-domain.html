@@ -1,0 +1,62 @@
+path: articles/custom-domain/
+title: 個人開発のゲームを独自ドメインで公開する — GitHub Pages と Cloudflare
+description: GitHub Pages で公開しているゲームを、独自ドメインでまとめて公開する手順。ユーザーサイトの仕組み、DNS の設定、つまずいた点、やっておきたいセキュリティ設定まで。
+nav: articles
+date: 2026-10-12
+summary: GitHub Pages のゲームを独自ドメインの下にまとめて公開した手順と、つまずいた点・セキュリティ設定。
+---
+<main class="narrow">
+  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/articles/">記事</a> › 独自ドメインで公開する</p>
+  <h1>個人開発のゲームを独自ドメインで公開する — GitHub Pages と Cloudflare</h1>
+  <!-- DATE -->
+  <p class="lead">このサイトのゲームは、どれも GitHub Pages で公開しています。最初は <code>ユーザー名.github.io/リポジトリ名/</code> という URL でしたが、独自ドメイン shinpoyo.com を取って、すべての作品を <code>shinpoyo.com/リポジトリ名/</code> にまとめました。その手順と、つまずいた点を残しておきます。</p>
+
+  <nav class="toc" aria-label="目次"><p>目次</p><ol>
+    <li><a href="#idea">まとめて移すしくみ</a></li>
+    <li><a href="#buy">ドメインを取る</a></li>
+    <li><a href="#steps">設定の手順</a></li>
+    <li><a href="#trap">つまずいた点</a></li>
+    <li><a href="#security">やっておきたいセキュリティ設定</a></li>
+  </ol></nav>
+
+  <h2 id="idea">まとめて移すしくみ</h2>
+  <p>GitHub Pages には、アカウントに1つだけ作れる「ユーザーサイト」があります。<code>ユーザー名.github.io</code> という名前のリポジトリを作ると、それがユーザーサイトになります。</p>
+  <p>このユーザーサイトに独自ドメインを設定すると、同じアカウントのほかのリポジトリのページ（プロジェクトサイト）も、自動でそのドメインの下に移ります。たとえばリポジトリ <code>mashimashida</code> のページは <code>shinpoyo.com/mashimashida/</code> になり、古い <code>shinpoyo.github.io/mashimashida/</code> からは自動で転送されます。作品ごとに設定しなくてよいのが便利なところです。</p>
+
+  <h2 id="buy">ドメインを取る</h2>
+  <p>ドメインは Cloudflare Registrar で取りました。上乗せのない価格で更新できるのと、DNS の設定画面がわかりやすいのが理由です。取ったらすぐに、アカウントの2要素認証を設定しておきましょう（ドメインを乗っ取られると、サイトもまるごと奪われてしまいます）。</p>
+
+  <h2 id="steps">設定の手順</h2>
+  <ol>
+    <li><strong>ドメインの所有確認</strong>：GitHub のアカウント設定の Pages で、ドメインを追加します。表示される TXT レコードを DNS に登録して確認すると、ほかの人がそのドメインを自分の GitHub Pages に設定できなくなります。</li>
+    <li><strong>ユーザーサイトのリポジトリを作る</strong>：<code>ユーザー名.github.io</code> を作り、トップページの HTML を置きます。</li>
+    <li><strong>DNS を設定する</strong>：ドメインそのもの（<code>@</code>）に、GitHub Pages の A レコード4つと AAAA レコード4つを登録します。<code>www</code> は CNAME で <code>ユーザー名.github.io</code> に向けます。Cloudflare の場合は、プロキシをオフ（DNS only）にします。</li>
+    <li><strong>カスタムドメインを設定する</strong>：ユーザーサイトのリポジトリの Pages 設定で、Custom domain にドメインを入れます。</li>
+    <li><strong>HTTPS を強制する</strong>：証明書が発行されたら「Enforce HTTPS」をオンにします。</li>
+  </ol>
+  <p class="small muted">A・AAAA レコードの値は変わることがあるので、GitHub の公式ドキュメント（Managing a custom domain for your GitHub Pages site）で最新のものを確認してください。</p>
+
+  <h2 id="trap">つまずいた点</h2>
+  <h3>カスタムドメインの設定は DNS のあとに</h3>
+  <p>DNS の設定より先にカスタムドメインを入れると、<code>github.io</code> の URL がまだつながらない独自ドメインへ転送されてしまい、すべての作品がしばらく見られなくなります。必ず DNS を設定してから、カスタムドメインを入れましょう。</p>
+  <h3>共有カードの URL が http になった</h3>
+  <p>GitHub Actions でビルドしている作品では、公開 URL をビルドに渡して、SNS の共有カード（OGP）の URL を作っていました。ところが、ドメインを切り替えた直後に再ビルドすると、取得した URL が <code>http://</code> になっていました。HTTPS の強制が反映される前だったためです。ビルドの設定で、必ず <code>https://</code> に置き換えるようにして解決しました。</p>
+  <h3>相対パスで作っておくと楽</h3>
+  <p>ページの中の画像やスクリプトを相対パスで読み込むようにしておけば、URL が変わってもそのまま動きます。今回、作品側のコードはほとんど直さずに済みました。</p>
+
+  <h2 id="security">やっておきたいセキュリティ設定</h2>
+  <p>ドメインを持つと、Web サイト以外にも気をつけたいことがあります。DNS の設定だけでできるものばかりです。</p>
+  <ul>
+    <li><strong>なりすましメール対策</strong>：メールを使わないドメインなら、SPF に <code>v=spf1 -all</code>、DMARC に <code>p=reject</code> を設定しておくと、そのドメインを名乗った迷惑メールが届きにくくなります。</li>
+    <li><strong>DNSSEC</strong>：DNS の応答が偽装されるのを防ぎます。Cloudflare ならボタン1つで有効にできます。</li>
+    <li><strong>使わないサブドメインを作らない</strong>：ワイルドカードのレコードや、使い終わったサービスに向いたままの CNAME は、乗っ取りの入口になります。</li>
+    <li><strong>自動更新をオンに</strong>：更新を忘れてドメインが切れると、第三者に取られてしまうことがあります。</li>
+  </ul>
+
+  <div class="cta">
+    <p>この手順で公開している作品は、<a href="/works/">作品一覧</a>から遊べます。</p>
+    <a class="btn" href="/works/">作品一覧へ</a>
+  </div>
+  <!-- MORE -->
+  <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
+</main>

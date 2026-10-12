@@ -107,3 +107,14 @@ details p { margin: 8px 0 2px; }
   .facts dd { margin-bottom: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* 記事 */
+code, kbd { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: .92em; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; }
+kbd { border-bottom-width: 2px; }
+.toc { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin: 20px 0; font-size: 15px; }
+.toc p { margin: 0 0 6px; font-weight: 700; }
+.toc ol { margin: 0; }
+.cta { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin: 32px 0 8px; }
+.cta p { margin: 0 0 10px; }
+
+main.narrow h1 { font-size: clamp(24px, 5.2vw, 38px); }

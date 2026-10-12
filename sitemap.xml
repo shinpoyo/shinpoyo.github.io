@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://shinpoyo.com/</loc></url>
   <url><loc>https://shinpoyo.com/about/</loc></url>
+  <url><loc>https://shinpoyo.com/articles/</loc></url>
+  <url><loc>https://shinpoyo.com/articles/custom-domain/</loc></url>
+  <url><loc>https://shinpoyo.com/articles/making-mashimashida/</loc></url>
+  <url><loc>https://shinpoyo.com/articles/romaji-n/</loc></url>
+  <url><loc>https://shinpoyo.com/articles/typing-practice/</loc></url>
   <url><loc>https://shinpoyo.com/contact/</loc></url>
   <url><loc>https://shinpoyo.com/privacy/</loc></url>
   <url><loc>https://shinpoyo.com/works/</loc></url>

@@ -8,6 +8,10 @@
   - description: 検索結果・共有カードの説明
   - nav: ヘッダーで強調するメニュー（top / works / about / contact）
   - image: 共有カード画像（省略時は assets/img/ogp.jpg）
+  - date: 記事の公開日（YYYY-MM-DD）。date があるページは「記事」として一覧に載る
+  - summary: 記事一覧に出す1〜2文の紹介
+- 本文に `<!-- ARTICLES -->` と書くと記事一覧（新しい順）、`<!-- ARTICLES:3 -->` で最新3件に置き換わる
+- 記事ページは本文の先頭に公開日、末尾に「ほかの記事」を自動で付ける
 - `_` で始まるフォルダは GitHub Pages（Jekyll）で公開されない
 """
 from pathlib import Path
@@ -19,6 +23,7 @@ SITE = "https://shinpoyo.com/"
 NAV = [
     ("top", "/", "トップ"),
     ("works", "/works/", "作品"),
+    ("articles", "/articles/", "記事"),
     ("about", "/about/", "このサイトについて"),
     ("contact", "/contact/", "お問い合わせ"),
 ]
@@ -79,6 +84,31 @@ def parse(src: Path):
     return data, body
 
 
+def article_list(articles, limit=None):
+    items = []
+    for a in articles[:limit]:
+        d = a["date"]
+        items.append(
+            f'  <li><time datetime="{d}">{d.replace("-", ".")}</time>'
+            f'<span><a href="/{a["path"]}">{html.escape(a["title"])}</a>'
+            f'<br><span class="small muted">{html.escape(a.get("summary", ""))}</span></span></li>'
+        )
+    return '<ul class="news">\n' + "\n".join(items) + "\n</ul>"
+
+
+def expand(body, meta, articles):
+    import re
+    body = re.sub(r"<!-- ARTICLES(?::(\d+))? -->", lambda m: article_list(articles, int(m.group(1)) if m.group(1) else None), body)
+    if meta.get("date"):
+        d = meta["date"]
+        stamp = f'<p class="muted small">公開日：<time datetime="{d}">{d.replace("-", ".")}</time>　／　書いた人：shinpoyo</p>'
+        body = body.replace("<!-- DATE -->", stamp)
+        others = [a for a in articles if a["path"] != meta["path"]][:3]
+        if others:
+            body = body.replace("<!-- MORE -->", "<h2>ほかの記事</h2>\n" + article_list(others))
+    return body
+
+
 def render(meta, body):
     path = meta.get("path", "")
     title = meta["title"] if not path else f"{meta['title']} | shinpoyo"
@@ -99,8 +129,10 @@ def render(meta, body):
 
 def main():
     urls = []
-    for src in sorted((ROOT / "_src").glob("*.html")):
-        meta, body = parse(src)
+    pages = [(src, *parse(src)) for src in sorted((ROOT / "_src").glob("*.html"))]
+    articles = sorted((m for _, m, _ in pages if m.get("date")), key=lambda m: (m["date"], m["path"]), reverse=True)
+    for src, meta, body in pages:
+        body = expand(body, meta, articles)
         out = ROOT / meta.get("path", "") / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(render(meta, body), encoding="utf-8")
