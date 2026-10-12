@@ -77,3 +77,8 @@
 - ユーザーの指示で「もぐもぐカメラ」をサイトから外した：紹介ページ・画像を削除し、トップ・作品一覧・サイトマップ・プライバシーポリシーから記述を削除（アプリ本体 `/mogumogu-camera/` の非公開はリポジトリ側の設定で行う）
 - マシマシ打の紹介ページに全国完飲番付の説明（FAQ）を追加、お知らせを更新
 - 確認：全ページを PC・スマホ幅で表示、横スクロール・内部リンク切れなし、フォームの埋め込み表示 OK
+
+## 2026-10-12 CAA・サイトマップの確認
+
+- ユーザーが CAA（`0 issue "letsencrypt.org"`）を追加。DNS 上では Cloudflare が自社の発行会社（pki.goog・ssl.com・comodoca.com・digicert.com）を自動で追加済み。追加後もサイトと api.shinpoyo.com は正常に応答
+- Search Console でサイトマップが「読み込めませんでした」：`sitemap.xml` は 200・`application/xml`・XML として正しく、robots.txt からも参照、Googlebot の UA でも取得できる → 登録直後によく出る表示のため、数日待って再確認
