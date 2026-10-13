@@ -82,3 +82,18 @@
 
 - ユーザーが CAA（`0 issue "letsencrypt.org"`）を追加。DNS 上では Cloudflare が自社の発行会社（pki.goog・ssl.com・comodoca.com・digicert.com）を自動で追加済み。追加後もサイトと api.shinpoyo.com は正常に応答
 - Search Console でサイトマップが「読み込めませんでした」：`sitemap.xml` は 200・`application/xml`・XML として正しく、robots.txt からも参照、Googlebot の UA でも取得できる → 登録直後によく出る表示のため、数日待って再確認
+
+## 2026-10-13 サイトの改善（検索対策・アイコン・記事追加）
+
+- 改善案を相談 → 「出来ることやって」の指示で、次を実施
+- **構造化データ（JSON-LD）**：`_tools/build.py` で全ページに自動付与
+  - トップ：`WebSite`／トップ以外：`BreadcrumbList`（パンくず）
+  - 記事：`BlogPosting`（公開日・著者・画像。更新があれば `dateModified`）
+  - 作品ページ：`VideoGame`（`_src` に `game_url:` `genre:` `lang:` を追加。無料・ブラウザで遊べる）
+- **sitemap.xml に `<lastmod>`**：`_src` ファイルの git 最終コミット日（未コミットの変更があれば当日）
+- **アイコン**：`favicon.ico`（16/32/48）・`assets/img/icon.svg`・`assets/img/apple-touch-icon.png`（180）を `_tools/make_icons.py` で生成。`theme-color`（ダーク／ライト）も追加。404 ページにも反映
+- **記事のシェアリンク**：記事の末尾に X・はてなブックマークへのリンク（外部スクリプトは読み込まないので、プライバシーポリシーの変更は不要）
+- **新しい記事**：「小さい「っ」「ゃ」やカタカナ語はどう打つ？ — ローマ字入力で迷いやすい文字」（`/articles/romaji-tricky/`）。主要な日本語入力に共通の打ち方だけを書き、マシマシ打が受け付ける入力については書いていない。トップのお知らせにも追加
+- 目次・記事末の作品への導線は、すでに全記事にあったため対応不要
+- **アクセス解析**は Cloudflare 側の操作とトークンが必要なため、手順書 [analytics.md](analytics.md) を作成
+- 確認：全 14 ページを PC・スマホ幅（375px）で表示し、横スクロールなし・内部リンク切れなし・JS エラーなし・JSON-LD はすべて正しく読める。アイコン 3 種は 200

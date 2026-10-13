@@ -10,15 +10,24 @@
   - image: 共有カード画像（省略時は assets/img/ogp.jpg）
   - date: 記事の公開日（YYYY-MM-DD）。date があるページは「記事」として一覧に載る
   - summary: 記事一覧に出す1〜2文の紹介
+  - crumb: パンくず（構造化データ）での短い名前（省略時は title の「 — 」より前）
+  - game_url / genre / lang: 作品ページ用。遊ぶ URL（例：mashimashida/）・ジャンル・対応言語（例：ja,en）
 - 本文に `<!-- ARTICLES -->` と書くと記事一覧（新しい順）、`<!-- ARTICLES:3 -->` で最新3件に置き換わる
-- 記事ページは本文の先頭に公開日、末尾に「ほかの記事」を自動で付ける
+- 記事ページは本文の先頭に公開日、末尾にシェアのリンクと「ほかの記事」を自動で付ける
+- 各ページに構造化データ（JSON-LD）を付け、sitemap.xml には git の最終コミット日を lastmod として入れる
 - `_` で始まるフォルダは GitHub Pages（Jekyll）で公開されない
 """
 from pathlib import Path
+from datetime import date
+from urllib.parse import quote
 import html
+import json
+import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://shinpoyo.com/"
+AUTHOR = {"@type": "Person", "name": "shinpoyo", "url": SITE + "about/"}
 
 NAV = [
     ("top", "/", "トップ"),
@@ -44,12 +53,16 @@ HEAD = """<!doctype html>
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{image}">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%23facc15'/><text x='32' y='44' font-size='34' text-anchor='middle' font-family='sans-serif' font-weight='900' fill='%23111'>s</text></svg>">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
-</head>
+{jsonld}</head>
 <body>
 <header class="site-header"><div class="inner">
   <a class="brand" href="/">shin<span>poyo</span></a>
@@ -96,20 +109,81 @@ def article_list(articles, limit=None):
     return '<ul class="news">\n' + "\n".join(items) + "\n</ul>"
 
 
+def git_date(src: Path):
+    """src の最終コミット日（YYYY-MM-DD）。未コミットの変更があれば今日"""
+    def git(*args):
+        try:
+            return subprocess.run(["git", *args, "--", str(src)], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+        except OSError:
+            return ""
+    if git("status", "--porcelain"):
+        return date.today().isoformat()
+    return git("log", "-1", "--format=%cs") or date.today().isoformat()
+
+
+def crumb_name(meta):
+    return meta.get("crumb") or meta["title"].split(" — ")[0]
+
+
+def jsonld(meta, titles):
+    path = meta.get("path", "")
+    url = SITE + path
+    image = SITE + meta.get("image", "assets/img/ogp.jpg")
+    data = []
+    if not path:
+        data.append({"@context": "https://schema.org", "@type": "WebSite", "name": "shinpoyo", "url": SITE,
+                     "inLanguage": "ja", "description": meta["description"], "author": AUTHOR})
+    else:
+        items, parts = [("トップ", SITE)], path.strip("/").split("/")
+        for i in range(len(parts)):
+            p = "/".join(parts[: i + 1]) + "/"
+            if p in titles:
+                items.append((titles[p], SITE + p))
+        data.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": n, "name": name, "item": u} for n, (name, u) in enumerate(items, 1)]})
+    if meta.get("date"):
+        article = {"@context": "https://schema.org", "@type": "BlogPosting", "headline": meta["title"],
+                   "description": meta["description"], "image": image, "datePublished": meta["date"],
+                   "author": AUTHOR, "publisher": AUTHOR, "mainEntityOfPage": url, "inLanguage": "ja"}
+        if meta["modified"] > meta["date"]:
+            article["dateModified"] = meta["modified"]
+        data.append(article)
+    if meta.get("game_url"):
+        langs = meta.get("lang", "ja").split(",")
+        data.append({"@context": "https://schema.org", "@type": "VideoGame", "name": crumb_name(meta),
+                     "description": meta["description"], "url": SITE + meta["game_url"], "image": image,
+                     "genre": meta.get("genre", ""), "gamePlatform": "Web browser",
+                     "applicationCategory": "GameApplication", "operatingSystem": "Web browser",
+                     "inLanguage": langs[0] if len(langs) == 1 else langs, "isAccessibleForFree": True,
+                     "offers": {"@type": "Offer", "price": "0", "priceCurrency": "JPY"}, "author": AUTHOR})
+    return "".join(
+        '<script type="application/ld+json">' + json.dumps(d, ensure_ascii=False).replace("</", "<\\/") + "</script>\n"
+        for d in data)
+
+
+def share_links(meta):
+    url = quote(SITE + meta["path"], safe="")
+    text = quote(meta["title"], safe="")
+    return (f'<p class="share small">この記事をシェア：'
+            f'<a href="https://x.com/intent/post?text={text}&amp;url={url}" target="_blank" rel="noopener">X（Twitter）</a>'
+            f'<a href="https://b.hatena.ne.jp/entry/s/{"shinpoyo.com/" + meta["path"]}" target="_blank" rel="noopener">はてなブックマーク</a></p>')
+
+
 def expand(body, meta, articles):
-    import re
     body = re.sub(r"<!-- ARTICLES(?::(\d+))? -->", lambda m: article_list(articles, int(m.group(1)) if m.group(1) else None), body)
     if meta.get("date"):
         d = meta["date"]
         stamp = f'<p class="muted small">公開日：<time datetime="{d}">{d.replace("-", ".")}</time>　／　書いた人：shinpoyo</p>'
         body = body.replace("<!-- DATE -->", stamp)
         others = [a for a in articles if a["path"] != meta["path"]][:3]
+        more = share_links(meta) + "\n"
         if others:
-            body = body.replace("<!-- MORE -->", "<h2>ほかの記事</h2>\n" + article_list(others))
+            more += "<h2>ほかの記事</h2>\n" + article_list(others)
+        body = body.replace("<!-- MORE -->", more)
     return body
 
 
-def render(meta, body):
+def render(meta, body, titles):
     path = meta.get("path", "")
     title = meta["title"] if not path else f"{meta['title']} | shinpoyo"
     nav = "\n".join(
@@ -123,24 +197,29 @@ def render(meta, body):
         image=SITE + meta.get("image", "assets/img/ogp.jpg"),
         og_type="website" if not path else "article",
         nav=nav,
+        jsonld=jsonld(meta, titles),
     )
     return head + body.strip() + "\n" + FOOT
 
 
 def main():
-    urls = []
+    lastmod = {}
     pages = [(src, *parse(src)) for src in sorted((ROOT / "_src").glob("*.html"))]
+    for src, meta, _ in pages:
+        meta["modified"] = git_date(src)
+    titles = {m.get("path", ""): crumb_name(m) for _, m, _ in pages}
     articles = sorted((m for _, m, _ in pages if m.get("date")), key=lambda m: (m["date"], m["path"]), reverse=True)
     for src, meta, body in pages:
         body = expand(body, meta, articles)
         out = ROOT / meta.get("path", "") / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(render(meta, body), encoding="utf-8")
-        urls.append(SITE + meta.get("path", ""))
+        out.write_text(render(meta, body, titles), encoding="utf-8")
+        lastmod[SITE + meta.get("path", "")] = max(meta["modified"], meta.get("date", ""))
         print("wrote", out.relative_to(ROOT))
-    urls.append(SITE + "privacy/")
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for u in sorted(set(urls)) + [SITE + "mashimashida/", SITE + "keshikasu/"]:
+    for u in sorted(lastmod):
+        sitemap.append(f"  <url><loc>{u}</loc><lastmod>{lastmod[u]}</lastmod></url>")
+    for u in [SITE + "mashimashida/", SITE + "keshikasu/"]:
         sitemap.append(f"  <url><loc>{u}</loc></url>")
     sitemap.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")

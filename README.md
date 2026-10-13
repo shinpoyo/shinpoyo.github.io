@@ -19,16 +19,19 @@ shinpoyo の個人サイト **https://shinpoyo.com/** 。各プロジェクト�
 ページ本文は `_src/*.html` にあり、共通のヘッダー・フッターは `_tools/build.py` が付ける。
 
 ```bash
-python3 _tools/build.py   # _src から各 index.html と sitemap.xml を書き出す
+python3 _tools/build.py        # _src から各 index.html と sitemap.xml を書き出す
+python3 _tools/make_icons.py   # アイコン（favicon.ico など）を作り直すときだけ
 ```
 
 - `_src` を直したら必ず実行して、書き出された HTML も一緒にコミットする（GitHub Pages はビルドせずにそのまま公開）
 - `_` で始まるフォルダは公開されない
+- 構造化データ（JSON-LD）・パンくず・sitemap の lastmod・記事のシェアリンクは自動で付く。作品ページは `game_url:` `genre:` を書くと作品（VideoGame）として扱われる
 
 ## ドキュメント
 
 - 独自ドメインの設定：[docs/custom-domain.md](docs/custom-domain.md)
 - 広告（AdSense）の導入手順：[docs/adsense.md](docs/adsense.md)
+- アクセス解析の導入手順：[docs/analytics.md](docs/analytics.md)
 - 作業履歴：[docs/worklog.md](docs/worklog.md)
 
 © 2026 shinpoyo. All rights reserved.
