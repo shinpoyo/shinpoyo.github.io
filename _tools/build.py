@@ -219,8 +219,8 @@ def main():
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in sorted(lastmod):
         sitemap.append(f"  <url><loc>{u}</loc><lastmod>{lastmod[u]}</lastmod></url>")
-    for u in [SITE + "mashimashida/", SITE + "keshikasu/"]:
-        sitemap.append(f"  <url><loc>{u}</loc></url>")
+    for g in sorted({SITE + m["game_url"] for _, m, _ in pages if m.get("game_url")}):
+        sitemap.append(f"  <url><loc>{g}</loc></url>")
     sitemap.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
     print("wrote sitemap.xml")
