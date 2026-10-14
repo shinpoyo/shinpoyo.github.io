@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://shinpoyo.com/</loc><lastmod>2026-10-13</lastmod></url>
-  <url><loc>https://shinpoyo.com/about/</loc><lastmod>2026-10-12</lastmod></url>
+  <url><loc>https://shinpoyo.com/</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://shinpoyo.com/about/</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://shinpoyo.com/articles/</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://shinpoyo.com/articles/custom-domain/</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://shinpoyo.com/articles/making-mashimashida/</loc><lastmod>2026-10-12</lastmod></url>
@@ -10,10 +10,15 @@
   <url><loc>https://shinpoyo.com/articles/typing-practice/</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://shinpoyo.com/contact/</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://shinpoyo.com/privacy/</loc><lastmod>2026-10-12</lastmod></url>
-  <url><loc>https://shinpoyo.com/works/</loc><lastmod>2026-10-13</lastmod></url>
+  <url><loc>https://shinpoyo.com/works/</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://shinpoyo.com/works/alchemerge-defense/</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://shinpoyo.com/works/keshikasu/</loc><lastmod>2026-10-13</lastmod></url>
   <url><loc>https://shinpoyo.com/works/mashimashida/</loc><lastmod>2026-10-13</lastmod></url>
+  <url><loc>https://shinpoyo.com/works/reversi-with-sis/</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://shinpoyo.com/works/smudge/</loc><lastmod>2026-10-13</lastmod></url>
-  <url><loc>https://shinpoyo.com/mashimashida/</loc></url>
+  <url><loc>https://shinpoyo.com/Reversi-with-Sis/</loc></url>
+  <url><loc>https://shinpoyo.com/alchemerge_defense/</loc></url>
   <url><loc>https://shinpoyo.com/keshikasu/</loc></url>
+  <url><loc>https://shinpoyo.com/mashimashida/</loc></url>
+  <url><loc>https://shinpoyo.com/smudge/</loc></url>
 </urlset>
