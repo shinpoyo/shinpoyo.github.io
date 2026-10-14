@@ -97,3 +97,11 @@
 - 目次・記事末の作品への導線は、すでに全記事にあったため対応不要
 - **アクセス解析**は Cloudflare 側の操作とトークンが必要なため、手順書 [analytics.md](analytics.md) を作成
 - 確認：全 14 ページを PC・スマホ幅（375px）で表示し、横スクロールなし・内部リンク切れなし・JS エラーなし・JSON-LD はすべて正しく読める。アイコン 3 種は 200
+
+## 2026-10-14 SMUDGE 体験版の掲載
+
+- ユーザーの指示で、SMUDGE のブラウザ体験版（最初の27面）をこのサイトで公開する準備
+- `/smudge/`：ゲーム本体。SMUDGE リポジトリ（private）の `npm run build:web` の出力 `dist-web/` をそのままコピー。更新手順は SMUDGE の `docs/web-trial.md`
+- `/works/smudge/`：紹介ページ（`_src/40-smudge.html`）。遊び方、Android 版（Google Play のクローズドテスト）への参加方法、FAQ。ゲーム内の「Android版について」はここを開く
+- 作品一覧・トップの作品とお知らせに追加。画像 `assets/img/smudge.jpg`（スマホ幅の画面を 1280x720 に配置）
+- ゲームは外部へ何も送信しない（フォントも同梱）ため、プライバシーポリシーの変更は不要

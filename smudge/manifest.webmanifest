@@ -1,0 +1,16 @@
+{
+  "name": "SMUDGE",
+  "short_name": "SMUDGE",
+  "description": "Read the smudge a fingertip left on the glass, and redraw the pattern in one stroke. A deduction puzzle.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#131313",
+  "theme_color": "#131313",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
