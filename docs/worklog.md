@@ -128,3 +128,20 @@
 
 - ユーザーの指示で、サイト上の作品名を「ねーちゃんとオセロ」に変更（`_src` 内のタイトル・見出し・説明文・alt・パンくず・お知らせ・About の例）
 - URL は変えていない（`/works/reversi-with-sis/`・`/Reversi-with-Sis/`）。ゲーム本体のタイトル（別リポジトリの `index.html`）は未変更
+
+## 2026-10-16 作品を2つ追加（はるしねーちゃん・Bullet Reflector）
+
+- ユーザーの依頼で、すでに公開されている2作品を紹介ページ付きで掲載（ゲーム本体は別リポジトリで、そのまま `/<リポジトリ名>/` で配信）
+  - はるしねーちゃん（`shinpoyo/haru_nechan_quiz_app`）→ 遊ぶ：`/haru_nechan_quiz_app/`、紹介：`/works/haru-nechan-quiz/`
+  - Bullet Reflector（`shinpoyo/Bullet-Reflector`）→ 遊ぶ：`/Bullet-Reflector/`、紹介：`/works/bullet-reflector/`
+- 紹介ページの内容は、各リポジトリのコードを読んで確かめた事実だけを書いた（パリィの判定・倍率・スキル・敵・ボス／クイズの流れ・ランクの基準・モード・保存される記録）
+- 画像は本番の URL を Playwright で操作して撮影。作品カード用（横長）と紹介ページ用（スマホ縦）を作成
+- はるしねーちゃんの外部送信を確認
+  - AI 出題と Gemini の声：利用者が入れた Gemini API キーで Google に送信（キーは localStorage に保存）
+  - 既定の声：同梱の音声ファイルで再生（外部送信なし）
+  - 設定画面から選べるのは「Gemini の声」と「七海（甘め）」の2種。コードに VOICEVOX（api.tts.quest）への送信があるが、画面からは選べないため、ポリシーには書いていない
+- プライバシーポリシー：外部送信の表に Gemini API を追加、端末内の保存に Gemini API キーを追記、改定日を 2026年10月16日 に
+- Bullet Reflector は外部送信なし（フォントのみ Google Fonts）。広告・課金なし
+- トップ（カード・お知らせ）、作品一覧に2作品を追加
+- 確認：全ページを PC・スマホ幅で表示し、横スクロールなし・内部リンク切れなし・JS エラーなし
+- 確認してほしいこと：はるしねーちゃんのイラスト（`haru_*.jpg`）が AI 生成かどうかは、コードからは判断できないため、About への記載は未対応
