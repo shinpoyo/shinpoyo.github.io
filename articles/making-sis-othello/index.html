@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話 | shinpoyo</title>
-<meta name="description" content="実体験をもとに作ったブラウザゲーム『ねーちゃんとオセロ』の制作記。勝つだけでは正解にならないエンディング、イライラ度という物差し、終盤ほど厳しくなる補正、わざと単純にした姉ちゃんの打ち方など、ゲームの仕組みを振り返ります。">
+<meta name="description" content="小さいころ、オセロで優勢になった途端にねーちゃんがちゃぶ台返し。その実体験から生まれたブラウザゲーム『ねーちゃんとオセロ』の制作記です。イライラ度という物差しや、終盤ほど厳しくなる補正など、ゲームの仕組みも振り返ります。">
 <meta name="google-adsense-account" content="ca-pub-3053925393924248">
 <link rel="canonical" href="https://shinpoyo.com/articles/making-sis-othello/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="shinpoyo">
 <meta property="og:title" content="ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話 | shinpoyo">
-<meta property="og:description" content="実体験をもとに作ったブラウザゲーム『ねーちゃんとオセロ』の制作記。勝つだけでは正解にならないエンディング、イライラ度という物差し、終盤ほど厳しくなる補正、わざと単純にした姉ちゃんの打ち方など、ゲームの仕組みを振り返ります。">
+<meta property="og:description" content="小さいころ、オセロで優勢になった途端にねーちゃんがちゃぶ台返し。その実体験から生まれたブラウザゲーム『ねーちゃんとオセロ』の制作記です。イライラ度という物差しや、終盤ほど厳しくなる補正など、ゲームの仕組みも振り返ります。">
 <meta property="og:url" content="https://shinpoyo.com/articles/making-sis-othello/">
 <meta property="og:image" content="https://shinpoyo.com/assets/img/sis-othello.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -24,7 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://shinpoyo.com/"}, {"@type": "ListItem", "position": 2, "name": "記事", "item": "https://shinpoyo.com/articles/"}, {"@type": "ListItem", "position": 3, "name": "ねーちゃんとオセロができるまで", "item": "https://shinpoyo.com/articles/making-sis-othello/"}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話", "description": "実体験をもとに作ったブラウザゲーム『ねーちゃんとオセロ』の制作記。勝つだけでは正解にならないエンディング、イライラ度という物差し、終盤ほど厳しくなる補正、わざと単純にした姉ちゃんの打ち方など、ゲームの仕組みを振り返ります。", "image": "https://shinpoyo.com/assets/img/sis-othello.jpg", "datePublished": "2026-10-17", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/making-sis-othello/", "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話", "description": "小さいころ、オセロで優勢になった途端にねーちゃんがちゃぶ台返し。その実体験から生まれたブラウザゲーム『ねーちゃんとオセロ』の制作記です。イライラ度という物差しや、終盤ほど厳しくなる補正など、ゲームの仕組みも振り返ります。", "image": "https://shinpoyo.com/assets/img/sis-othello.jpg", "datePublished": "2026-10-17", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/making-sis-othello/", "inLanguage": "ja"}</script>
 </head>
 <body>
 <header class="site-header"><div class="inner">
@@ -41,10 +41,11 @@
   <p class="breadcrumb"><a href="/">トップ</a> › <a href="/articles/">記事</a> › ねーちゃんとオセロができるまで</p>
   <h1>ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話</h1>
   <p class="muted small">公開日：<time datetime="2026-10-17">2026.10.17</time>　／　書いた人：shinpoyo</p>
-  <p class="lead">「ねーちゃんとオセロ」は、実体験をもとに作ったゲームです。オセロはふつう、相手より多くの石を取れば勝ちです。でも、相手が身近な人だと、勝ち方にも気をつかう場面があります。勝ちすぎると機嫌をそこねるし、わざと負けるのも何か違う。その対局の空気を、ゲームのルールにしてみました。</p>
+  <p class="lead">「ねーちゃんとオセロ」は、小さいころの実体験をもとに作ったゲームです。オセロはふつう、相手より多くの石を取れば勝ちです。でも、相手が身近な人だと、勝ち方にも気をつかう場面があります。この記事では、ゲームが生まれたきっかけの「あの日のできごと」と、それをどうゲームのルールにしたのかを書きます。</p>
   <img class="hero-img" src="/assets/img/sis-othello.jpg" alt="ねーちゃんとオセロの画面。姉ちゃんの顔とイライラ度のバー、オセロ盤、ちゃぶ台返しの場面" width="1280" height="720">
 
   <nav class="toc" aria-label="目次"><p>目次</p><ol>
+    <li><a href="#story">あの日のできごと</a></li>
     <li><a href="#goal">「勝ち」の中身を変える</a></li>
     <li><a href="#anger">イライラ度という物差し</a></li>
     <li><a href="#endgame">終盤ほど厳しくする</a></li>
@@ -52,6 +53,19 @@
     <li><a href="#ai">姉ちゃんの打ち方は、わざと単純に</a></li>
     <li><a href="#manga">マンガのように見せる</a></li>
   </ol></nav>
+
+  <h2 id="story">あの日のできごと</h2>
+  <p class="small muted">※ 実際にあった話をもとに、少し脚色して書いています。</p>
+  <p>小さいころ、よくねーちゃんとオセロをしました。</p>
+  <p>その日も、ごくふつうの対局でした。ねーちゃんは自信満々です。「弟に負けるわけないでしょ」と顔に書いてあって、石を置く手つきまで堂々としています。ぼくは、勝とうなんて思っていません。置けるところに置いているだけでした。</p>
+  <p>ところが、気づくと盤の上が、じわじわ黒くなっています。黒は、ぼくです。</p>
+  <p>ねーちゃんの口数が、少しずつ減っていきました。さっきまで「そこはね、こう打つの」と先生のように教えてくれていたのに、いつのまにか「……」と「ん？」しか言わなくなりました。石を置く音も、パチン、から、バチィッ！に変わっていきます。ぼくは、そっと目をそらしました。</p>
+  <p>そして、ぼくが次の石を置いた、その瞬間でした。</p>
+  <p>ねーちゃんは、静かに立ち上がりました。盤の端に手をかけます。そして ── ひっくり返しました。</p>
+  <p>オセロは、石をひっくり返すゲームです。でも、盤ごとひっくり返していいとは、説明書のどこにも書いてありません。白と黒の石が、部屋じゅうに飛び散りました。たぶん、あの一瞬は全部の石がひっくり返っていたので、ある意味ルールどおりです。</p>
+  <p>「もうやらない！」</p>
+  <p>ねーちゃんはそう言い残して、部屋を出ていきました。あとに残ったのは、ぼくと、床に散らばった石と、「勝ったのは、どっちだったんだろう」という疑問だけでした。</p>
+  <p>そのとき、ぼくは学びました。勝つことと、うまくやることは、別のことなんだと。あの日のオセロ盤は、いまもゲームの中で、何度でも宙を舞っています。</p>
 
   <h2 id="goal">「勝ち」の中身を変える</h2>
   <p>このゲームの結末は、勝ち負けの2つではありません。勝ったときの石の差で、結末が分かれます。</p>
