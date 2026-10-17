@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音声ファイルなしで効果音を鳴らす — Web Audio API の基本 | shinpoyo</title>
+<meta name="description" content="ブラウザゲームの効果音を、音声ファイルを使わずに Web Audio API で作る方法。オシレーターとゲインの基本、音程と音量を変化させて「コン」「ピコッ」といった音にするコツ、スマホで音が鳴らないときの注意点まで。">
+<meta name="google-adsense-account" content="ca-pub-3053925393924248">
+<link rel="canonical" href="https://shinpoyo.com/articles/web-audio-se/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="shinpoyo">
+<meta property="og:title" content="音声ファイルなしで効果音を鳴らす — Web Audio API の基本 | shinpoyo">
+<meta property="og:description" content="ブラウザゲームの効果音を、音声ファイルを使わずに Web Audio API で作る方法。オシレーターとゲインの基本、音程と音量を変化させて「コン」「ピコッ」といった音にするコツ、スマホで音が鳴らないときの注意点まで。">
+<meta property="og:url" content="https://shinpoyo.com/articles/web-audio-se/">
+<meta property="og:image" content="https://shinpoyo.com/assets/img/ogp.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://shinpoyo.com/"}, {"@type": "ListItem", "position": 2, "name": "記事", "item": "https://shinpoyo.com/articles/"}, {"@type": "ListItem", "position": 3, "name": "Web Audio API で効果音", "item": "https://shinpoyo.com/articles/web-audio-se/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "音声ファイルなしで効果音を鳴らす — Web Audio API の基本", "description": "ブラウザゲームの効果音を、音声ファイルを使わずに Web Audio API で作る方法。オシレーターとゲインの基本、音程と音量を変化させて「コン」「ピコッ」といった音にするコツ、スマホで音が鳴らないときの注意点まで。", "image": "https://shinpoyo.com/assets/img/ogp.jpg", "datePublished": "2026-10-17", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/web-audio-se/", "inLanguage": "ja"}</script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="/">shin<span>poyo</span></a>
+  <nav class="site-nav" aria-label="サイト内メニュー">
+    <a href="/">トップ</a>
+    <a href="/works/">作品</a>
+    <a href="/articles/" aria-current="page">記事</a>
+    <a href="/about/">このサイトについて</a>
+    <a href="/contact/">お問い合わせ</a>
+  </nav>
+</div></header>
+<main class="narrow">
+  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/articles/">記事</a> › Web Audio API で効果音</p>
+  <h1>音声ファイルなしで効果音を鳴らす — Web Audio API の基本</h1>
+  <p class="muted small">公開日：<time datetime="2026-10-17">2026.10.17</time>　／　書いた人：shinpoyo</p>
+  <p class="lead">このサイトのゲームのいくつかは、効果音に音声ファイルを使っていません。ブラウザに入っている Web Audio API で、その場で音を作って鳴らしています。この記事では、そのいちばん基本の作り方を紹介します。</p>
+
+  <nav class="toc" aria-label="目次"><p>目次</p><ol>
+    <li><a href="#why">ファイルを使わない良さ</a></li>
+    <li><a href="#basic">いちばん小さなコード</a></li>
+    <li><a href="#shape">音程と音量を動かして「効果音」にする</a></li>
+    <li><a href="#wave">波形のちがい</a></li>
+    <li><a href="#notes">つまずきやすいところ</a></li>
+  </ol></nav>
+
+  <h2 id="why">ファイルを使わない良さ</h2>
+  <ul>
+    <li><strong>読み込みがいらない</strong>：音声ファイルをダウンロードしないので、ページがすぐに使えます。</li>
+    <li><strong>容量がほぼゼロ</strong>：音はコードの数行です。ゲームを1つのファイルにまとめやすくなります。</li>
+    <li><strong>変化をつけやすい</strong>：音の高さを少しずつ変えるなど、場面に合わせた調整がコードだけでできます。</li>
+  </ul>
+  <p>一方で、人の声や楽器のような複雑な音は苦手です。「ピッ」「コン」「ドーン」のような、短くて単純な効果音に向いています。</p>
+
+  <h2 id="basic">いちばん小さなコード</h2>
+  <p>Web Audio API では、音を作る部品（ノード）をつないで音を鳴らします。いちばん簡単なのは、一定の高さの音を出す「オシレーター」と、音量を決める「ゲイン」をつなぐ形です。</p>
+<pre><code>const ctx = new AudioContext();
+
+function beep() {
+  const osc = ctx.createOscillator();   // 音を出す
+  const gain = ctx.createGain();        // 音量を決める
+  osc.frequency.value = 880;            // 音の高さ（Hz）
+  gain.gain.value = 0.2;                // 音量（0〜1）
+  osc.connect(gain);
+  gain.connect(ctx.destination);        // スピーカーへ
+  osc.start();
+  osc.stop(ctx.currentTime + 0.1);      // 0.1秒で止める
+}</code></pre>
+  <p>これで「ピッ」と鳴ります。ただ、このままだと音の始まりと終わりがぶつっと切れて、少し機械的に聞こえます。</p>
+
+  <h2 id="shape">音程と音量を動かして「効果音」にする</h2>
+  <p>効果音らしくするコツは、短い時間のうちに音の高さと音量を変化させることです。たとえば「ねーちゃんとオセロ」で石を置いたときの音は、次のように作っています。</p>
+<pre><code>function place() {
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  // 340Hz から 65Hz へ、0.065秒で一気に下げる
+  osc.frequency.setValueAtTime(340, now);
+  osc.frequency.exponentialRampToValueAtTime(65, now + 0.065);
+  // 音量も 0.07秒でほぼゼロまで下げる
+  gain.gain.setValueAtTime(0.45, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.075);
+}</code></pre>
+  <p>高い音から低い音へ素早く下げると、「コン」という、ものを置いたような音になります。反対に、低い音から高い音へ上げると「ピコッ」と明るい音になります。</p>
+  <ul>
+    <li><strong>下がる音</strong>：置く・当たる・落ちる</li>
+    <li><strong>上がる音</strong>：決定・ひらめき・アイテム入手</li>
+    <li><strong>音を少しずつ高くする</strong>：連続で何かが起きるとき（たとえば石を何枚もひっくり返すとき）に、1つごとに音を高くすると、気持ちよく盛り上がります。</li>
+  </ul>
+  <p>さらに、いくつかのオシレーターを重ねて和音にしたり、ノイズ（ランダムな波）を作ってフィルターをかけたりすると、爆発や崩れる音のような、にぎやかな音も作れます。</p>
+
+  <h2 id="wave">波形のちがい</h2>
+  <p>オシレーターの <code>type</code> を変えると、音の感じが変わります。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>type</th><th>音の感じ</th><th>向いている音</th></tr></thead>
+    <tbody>
+      <tr><td><code>sine</code></td><td>やわらかく、丸い</td><td>ポップな決定音、心臓の音</td></tr>
+      <tr><td><code>triangle</code></td><td>sine より少しはっきり</td><td>石を置く音、メロディ</td></tr>
+      <tr><td><code>square</code></td><td>レトロゲームのような、ピコピコした音</td><td>8ビット風の効果音</td></tr>
+      <tr><td><code>sawtooth</code></td><td>ジリジリした、強い音</td><td>警告、衝撃、ボスの攻撃</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="notes">つまずきやすいところ</h2>
+  <ul>
+    <li><strong>最初の操作まで音が鳴らない</strong>：多くのブラウザは、ページを開いただけで勝手に音が鳴らないようにしています。<code>AudioContext</code> は止まった状態（<code>suspended</code>）で始まることがあるので、ボタンを押したときなど、利用者の操作のあとで <code>ctx.resume()</code> を呼びましょう。</li>
+    <li><strong>音量を 0 まで「なめらかに」下げられない</strong>：<code>exponentialRampToValueAtTime</code> は、目標の値に 0 を指定できません。0.001 のような、とても小さい値を使います。</li>
+    <li><strong>止めるのを忘れない</strong>：<code>stop()</code> を呼ばないオシレーターは鳴り続けます。音量を下げきったあと、少し後に止めるようにしましょう。</li>
+    <li><strong>音量は控えめに</strong>：重ねるほど音は大きくなります。1つの音のゲインは 0.2〜0.5 くらいから試し、消音ボタンも用意しておくと親切です。</li>
+  </ul>
+
+  <div class="cta">
+    <p>この記事のような効果音は、このサイトの作品で実際に使っています。音のON/OFFを切り替えながら、遊んで聞きくらべてみてください。</p>
+    <a class="btn" href="/works/">作品一覧へ</a>
+  </div>
+  <p class="share small">この記事をシェア：<a href="https://x.com/intent/post?text=%E9%9F%B3%E5%A3%B0%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AA%E3%81%97%E3%81%A7%E5%8A%B9%E6%9E%9C%E9%9F%B3%E3%82%92%E9%B3%B4%E3%82%89%E3%81%99%20%E2%80%94%20Web%20Audio%20API%20%E3%81%AE%E5%9F%BA%E6%9C%AC&amp;url=https%3A%2F%2Fshinpoyo.com%2Farticles%2Fweb-audio-se%2F" target="_blank" rel="noopener">X（Twitter）</a><a href="https://b.hatena.ne.jp/entry/s/shinpoyo.com/articles/web-audio-se/" target="_blank" rel="noopener">はてなブックマーク</a></p>
+<h2>ほかの記事</h2>
+<ul class="news">
+  <li><time datetime="2026-10-17">2026.10.17</time><span><a href="/articles/making-sis-othello/">ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話</a><br><span class="small muted">実体験から生まれた「接待オセロ」。勝ち方を問うエンディングと、イライラ度の仕組みを振り返る制作記。</span></span></li>
+  <li><time datetime="2026-10-17">2026.10.17</time><span><a href="/articles/ai-hallucination/">AIの「ハルシネーション」とは？ — もっともらしい嘘を見破るコツ</a><br><span class="small muted">生成AIの「もっともらしい嘘」が起こる理由と、出やすいパターン、見破るためのコツ。</span></span></li>
+  <li><time datetime="2026-10-13">2026.10.13</time><span><a href="/articles/romaji-tricky/">小さい「っ」「ゃ」やカタカナ語はどう打つ？ — ローマ字入力で迷いやすい文字</a><br><span class="small muted">小さい文字の単独入力、「っ」の打ち方、何通りもある打ち方、「ふぁ」「てぃ」などカタカナ語の音。</span></span></li>
+</ul>
+  <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
+</main>
+<footer class="site-footer"><div class="inner">
+  <span>© 2026 shinpoyo. All rights reserved.</span>
+  <nav aria-label="フッターメニュー">
+    <a href="/about/">このサイトについて</a>
+    <a href="/privacy/">プライバシーポリシー</a>
+    <a href="/contact/">お問い合わせ</a>
+    <a href="https://github.com/shinpoyo">GitHub</a>
+  </nav>
+</div></footer>
+<script src="/ads.js"></script>
+</body>
+</html>

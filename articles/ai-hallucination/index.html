@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIの「ハルシネーション」とは？ — もっともらしい嘘を見破るコツ | shinpoyo</title>
+<meta name="description" content="生成AIがもっともらしい嘘をつく「ハルシネーション」とは何か、なぜ起こるのか、どんな形で出てきやすいのか、見破るにはどうすればいいのかを、わかりやすくまとめます。">
+<meta name="google-adsense-account" content="ca-pub-3053925393924248">
+<link rel="canonical" href="https://shinpoyo.com/articles/ai-hallucination/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="shinpoyo">
+<meta property="og:title" content="AIの「ハルシネーション」とは？ — もっともらしい嘘を見破るコツ | shinpoyo">
+<meta property="og:description" content="生成AIがもっともらしい嘘をつく「ハルシネーション」とは何か、なぜ起こるのか、どんな形で出てきやすいのか、見破るにはどうすればいいのかを、わかりやすくまとめます。">
+<meta property="og:url" content="https://shinpoyo.com/articles/ai-hallucination/">
+<meta property="og:image" content="https://shinpoyo.com/assets/img/haru-nechan-quiz.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://shinpoyo.com/"}, {"@type": "ListItem", "position": 2, "name": "記事", "item": "https://shinpoyo.com/articles/"}, {"@type": "ListItem", "position": 3, "name": "AIのハルシネーションとは", "item": "https://shinpoyo.com/articles/ai-hallucination/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "AIの「ハルシネーション」とは？ — もっともらしい嘘を見破るコツ", "description": "生成AIがもっともらしい嘘をつく「ハルシネーション」とは何か、なぜ起こるのか、どんな形で出てきやすいのか、見破るにはどうすればいいのかを、わかりやすくまとめます。", "image": "https://shinpoyo.com/assets/img/haru-nechan-quiz.jpg", "datePublished": "2026-10-17", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/ai-hallucination/", "inLanguage": "ja"}</script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="/">shin<span>poyo</span></a>
+  <nav class="site-nav" aria-label="サイト内メニュー">
+    <a href="/">トップ</a>
+    <a href="/works/">作品</a>
+    <a href="/articles/" aria-current="page">記事</a>
+    <a href="/about/">このサイトについて</a>
+    <a href="/contact/">お問い合わせ</a>
+  </nav>
+</div></header>
+<main class="narrow">
+  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/articles/">記事</a> › AIのハルシネーションとは</p>
+  <h1>AIの「ハルシネーション」とは？ — もっともらしい嘘を見破るコツ</h1>
+  <p class="muted small">公開日：<time datetime="2026-10-17">2026.10.17</time>　／　書いた人：shinpoyo</p>
+  <p class="lead">ChatGPT や Gemini のような生成AIは、質問にすらすらと答えてくれます。でも、その答えがいつも正しいとは限りません。ときには、本当のことのように自然な文章で、事実と違うことを言います。これを「ハルシネーション」と呼びます。この記事では、ハルシネーションが起こる理由と、見破るためのコツをまとめます。</p>
+
+  <nav class="toc" aria-label="目次"><p>目次</p><ol>
+    <li><a href="#what">ハルシネーションとは</a></li>
+    <li><a href="#why">なぜ起こるのか</a></li>
+    <li><a href="#pattern">出てきやすいパターン</a></li>
+    <li><a href="#check">見破るコツ</a></li>
+    <li><a href="#game">ゲームで練習する</a></li>
+  </ol></nav>
+
+  <h2 id="what">ハルシネーションとは</h2>
+  <p>ハルシネーション（hallucination）は、英語で「幻覚」という意味です。生成AIが、事実ではない内容を、もっともらしく答えてしまうことを指します。</p>
+  <p>やっかいなのは、間違っているときも、正しいときと同じように自信のある口調で答えることです。文章が自然で、それらしい名前や数字も入っているので、読んだだけでは気づきにくいのです。</p>
+
+  <h2 id="why">なぜ起こるのか</h2>
+  <p>生成AIの文章づくりは、「この流れなら、次にはこういう言葉が来そうだ」という予測を積み重ねる仕組みになっています。事実をひとつずつ調べて確かめながら書いているわけではありません。そのため、次のようなときに、事実と違う内容が出てきやすくなります。</p>
+  <ul>
+    <li><strong>知らないことを聞かれたとき</strong>：学習した情報が少ない話題でも、「分からない」と言わずに、それらしい答えを組み立ててしまうことがあります。</li>
+    <li><strong>情報が古いとき</strong>：学習した時期よりあとのできごとは、知らないか、古い情報のまま答えることがあります。</li>
+    <li><strong>質問の前提がまちがっているとき</strong>：「〇〇が△△した理由は？」のように、まちがった前提で聞くと、その前提に合わせた説明を作ってしまうことがあります。</li>
+  </ul>
+
+  <h2 id="pattern">出てきやすいパターン</h2>
+  <p>ハルシネーションには、よく見かける形があります。</p>
+  <ul>
+    <li><strong>実在しない本・論文・記事</strong>：それらしいタイトルと著者名で、存在しない文献を挙げることがあります。</li>
+    <li><strong>それらしい人名・年号・数字</strong>：「〇年に〇〇博士が発見した」のように、具体的な名前や数字がついていると、本当らしく見えます。</li>
+    <li><strong>本当の話に、うそが少し混ざる</strong>：大部分は正しいのに、細かいところだけ事実と違う、というのがいちばん見破りにくい形です。</li>
+    <li><strong>存在しない URL やリンク</strong>：形は正しいのに、開くとページがない、ということがあります。</li>
+  </ul>
+
+  <h2 id="check">見破るコツ</h2>
+  <ul>
+    <li><strong>大事なことは、もとの情報で確かめる</strong>：公式サイト、公的機関の発表、辞書や事典など、もとの情報にあたって確認しましょう。</li>
+    <li><strong>固有名詞と数字を調べる</strong>：人名・作品名・年号・数字は、検索して本当にあるか確かめるのが近道です。</li>
+    <li><strong>出典はかならず開く</strong>：「出典を教えて」と聞くと答えてくれますが、その出典自体が存在しないこともあります。リンクは実際に開き、本当にその内容が書いてあるか確かめましょう。</li>
+    <li><strong>ちがう情報源とくらべる</strong>：ひとつの答えだけで決めず、別の情報源でも同じことが書かれているかを見ます。</li>
+    <li><strong>詳しくない分野ほど注意する</strong>：自分がよく知らない分野では、まちがいに気づきにくくなります。そういうときほど、確認を多めにしましょう。</li>
+  </ul>
+  <p>生成AIは、文章の下書きやアイデア出しにはとても便利です。ただ、事実を確かめる道具としては、まだ人の確認が欠かせません。「使うけれど、うのみにしない」くらいの距離感がちょうどいいと思います。</p>
+
+  <h2 id="game">ゲームで練習する</h2>
+  <p>「はるしねーちゃん」は、このハルシネーションを題材にしたクイズゲームです。博識ぶるのが大好きなお姉ちゃんが「ねえ知ってる？」と雑学を話してくれますが、その半分くらいは、もっともらしい知ったかぶり。それが嘘か本当かを見破ります。</p>
+  <p>お姉ちゃんのハルシネーションは、実在しそうな人名や年号、専門用語を混ぜて作ってあります。逆に、嘘みたいに聞こえて本当の話もあります。たとえば「ウォンバットのうんちは四角い（立方体に近い形）」は、うそのようですが本当です。見た目の「それっぽさ」で決めつけない練習になります。</p>
+
+  <div class="cta">
+    <p><strong>はるしねーちゃん</strong>：お姉ちゃんの話が、ハルシネーション（嘘）か、ホント（嘘みたいな本当）かを見破るクイズです。7問勝負から気軽に遊べます。</p>
+    <a class="btn" href="/works/haru-nechan-quiz/">遊び方を見る</a>
+  </div>
+  <p class="share small">この記事をシェア：<a href="https://x.com/intent/post?text=AI%E3%81%AE%E3%80%8C%E3%83%8F%E3%83%AB%E3%82%B7%E3%83%8D%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%80%8D%E3%81%A8%E3%81%AF%EF%BC%9F%20%E2%80%94%20%E3%82%82%E3%81%A3%E3%81%A8%E3%82%82%E3%82%89%E3%81%97%E3%81%84%E5%98%98%E3%82%92%E8%A6%8B%E7%A0%B4%E3%82%8B%E3%82%B3%E3%83%84&amp;url=https%3A%2F%2Fshinpoyo.com%2Farticles%2Fai-hallucination%2F" target="_blank" rel="noopener">X（Twitter）</a><a href="https://b.hatena.ne.jp/entry/s/shinpoyo.com/articles/ai-hallucination/" target="_blank" rel="noopener">はてなブックマーク</a></p>
+<h2>ほかの記事</h2>
+<ul class="news">
+  <li><time datetime="2026-10-17">2026.10.17</time><span><a href="/articles/web-audio-se/">音声ファイルなしで効果音を鳴らす — Web Audio API の基本</a><br><span class="small muted">オシレーターで音を作り、音程と音量を変化させて効果音にする。Web Audio API の基本と注意点。</span></span></li>
+  <li><time datetime="2026-10-17">2026.10.17</time><span><a href="/articles/making-sis-othello/">ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話</a><br><span class="small muted">実体験から生まれた「接待オセロ」。勝ち方を問うエンディングと、イライラ度の仕組みを振り返る制作記。</span></span></li>
+  <li><time datetime="2026-10-13">2026.10.13</time><span><a href="/articles/romaji-tricky/">小さい「っ」「ゃ」やカタカナ語はどう打つ？ — ローマ字入力で迷いやすい文字</a><br><span class="small muted">小さい文字の単独入力、「っ」の打ち方、何通りもある打ち方、「ふぁ」「てぃ」などカタカナ語の音。</span></span></li>
+</ul>
+  <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
+</main>
+<footer class="site-footer"><div class="inner">
+  <span>© 2026 shinpoyo. All rights reserved.</span>
+  <nav aria-label="フッターメニュー">
+    <a href="/about/">このサイトについて</a>
+    <a href="/privacy/">プライバシーポリシー</a>
+    <a href="/contact/">お問い合わせ</a>
+    <a href="https://github.com/shinpoyo">GitHub</a>
+  </nav>
+</div></footer>
+<script src="/ads.js"></script>
+</body>
+</html>
