@@ -32,6 +32,8 @@ python3 _tools/make_icons.py   # アイコン（favicon.ico など）を作り�
 - 独自ドメインの設定：[docs/custom-domain.md](docs/custom-domain.md)
 - 広告（AdSense）の導入手順：[docs/adsense.md](docs/adsense.md)
 - アクセス解析の導入手順：[docs/analytics.md](docs/analytics.md)
+- サイトの品質チェックと改善の順番：[docs/quality-audit.md](docs/quality-audit.md)
+- Search Console の確認手順：[docs/search-console.md](docs/search-console.md)
 - 作業履歴：[docs/worklog.md](docs/worklog.md)
 
 © 2026 shinpoyo. All rights reserved.
