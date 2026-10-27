@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="/assets/site.css">
 <link rel="alternate" type="application/atom+xml" title="shinpoyo の記事" href="/feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://shinpoyo.com/"}, {"@type": "ListItem", "position": 2, "name": "記事", "item": "https://shinpoyo.com/articles/"}, {"@type": "ListItem", "position": 3, "name": "マシマシ打ができるまで", "item": "https://shinpoyo.com/articles/making-mashimashida/"}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "マシマシ打ができるまで — 2つの試作を1つにまとめた話", "description": "タイピングゲーム『マシマシ打』の制作記。見た目の試作とロジックの試作を1つにまとめ、遊びにくい要素を削り、プレイ画面をシンプルにしていった過程を振り返ります。", "image": "https://shinpoyo.com/assets/img/mashimashida-ticket.jpg", "datePublished": "2026-10-12", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/making-mashimashida/", "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "マシマシ打ができるまで — 2つの試作を1つにまとめた話", "description": "タイピングゲーム『マシマシ打』の制作記。見た目の試作とロジックの試作を1つにまとめ、遊びにくい要素を削り、プレイ画面をシンプルにしていった過程を振り返ります。", "image": "https://shinpoyo.com/assets/img/mashimashida-ticket.jpg", "datePublished": "2026-10-12", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/making-mashimashida/", "inLanguage": "ja", "dateModified": "2026-10-27"}</script>
 </head>
 <body>
 <header class="site-header"><div class="inner">
@@ -61,7 +61,7 @@
   </ul>
 
   <h2 id="merge">いいとこ取りでまとめる</h2>
-  <p>そこで、見た目の試作を土台にして、ロジックの試作の判定や出題の仕組みを TypeScript に書き直して組み込みました。ローマ字の判定は細かい決まりが多いので、移植したあとに自動テストを書き、「<code>ninniku</code> は『にんいく』になる」といった実際の日本語入力と同じふるまいになっているかを確かめています（この「ん」の話は<a href="/articles/romaji-n/">別の記事</a>にまとめました）。</p>
+  <p>そこで、見た目の試作を土台にして、ロジックの試作の判定や出題の仕組みを TypeScript に書き直して組み込みました。ローマ字の判定は細かい決まりが多いので、移植したあとに自動テストを書き、「<code>ninniku</code> は『にんいく』になる」といった実際の日本語入力と同じふるまいになっているかを確かめています（この「ん」の話は<a href="/articles/romaji/#n">別の記事</a>にまとめました）。</p>
 
   <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
 
@@ -99,9 +99,9 @@
   <p class="share small">この記事をシェア：<a href="https://x.com/intent/post?text=%E3%83%9E%E3%82%B7%E3%83%9E%E3%82%B7%E6%89%93%E3%81%8C%E3%81%A7%E3%81%8D%E3%82%8B%E3%81%BE%E3%81%A7%20%E2%80%94%202%E3%81%A4%E3%81%AE%E8%A9%A6%E4%BD%9C%E3%82%921%E3%81%A4%E3%81%AB%E3%81%BE%E3%81%A8%E3%82%81%E3%81%9F%E8%A9%B1&amp;url=https%3A%2F%2Fshinpoyo.com%2Farticles%2Fmaking-mashimashida%2F" target="_blank" rel="noopener">X（Twitter）</a><a href="https://b.hatena.ne.jp/entry/s/shinpoyo.com/articles/making-mashimashida/" target="_blank" rel="noopener">はてなブックマーク</a></p>
 <h2>ほかの記事</h2>
 <ul class="news">
+  <li><time datetime="2026-10-27">2026.10.27</time><span><a href="/articles/romaji/">ローマ字入力で迷いやすい文字の打ち方 — 「ん」「っ」「ゃ」からカタカナ語まで（確認ツール付き）</a><br><span class="small muted">「ん」「っ」「ゃ」やカタカナ語の打ち方のまとめ。打ったローマ字の区切られ方と、言葉のいちばん短い打ち方をその場で確かめられるツール付き。</span></span></li>
   <li><time datetime="2026-10-26">2026.10.26</time><span><a href="/articles/why-i-make-games/">ゲームを作るようになったわけ — 風船タップから、ラーメンとオセロまで</a><br><span class="small muted">AIエージェントで作った風船ゲームから、ラーメン・消しゴム・パターンロック・縛りプレイまで。作品ごとの「作ったきっかけ」。</span></span></li>
   <li><time datetime="2026-10-17">2026.10.17</time><span><a href="/articles/web-audio-se/">音声ファイルなしで効果音を鳴らす — Web Audio API の基本</a><br><span class="small muted">オシレーターで音を作り、音程と音量を変化させて効果音にする。Web Audio API の基本と注意点。</span></span></li>
-  <li><time datetime="2026-10-17">2026.10.17</time><span><a href="/articles/making-sis-othello/">ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話</a><br><span class="small muted">優勢になった途端、ねーちゃんがちゃぶ台返し。あの日の実体験から生まれた「接待オセロ」の制作記。</span></span></li>
 </ul>
   <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
 </main>

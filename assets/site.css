@@ -156,3 +156,22 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
 .daily { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .daily li { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; }
 .daily a { text-decoration: none; }
+
+/* 記事の中で動くツール */
+.tool { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 16px 0; }
+.tool h3 { margin-top: 0; }
+.tool label { display: block; margin-top: 6px; }
+.tool-in { width: 100%; font: 18px/1.4 ui-monospace, "JetBrains Mono", monospace; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 4px 0 8px; }
+.tool-in:focus { outline: 3px solid var(--accent); outline-offset: 1px; }
+.tool-ex { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px; }
+.tool-ex button { font: inherit; font-size: 13px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+.tool-out { font-size: 22px; font-weight: 700; margin: 4px 0 8px; overflow-wrap: anywhere; }
+.tool-out .small { font-weight: 400; }
+.segs { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { margin: 0; display: flex; flex-direction: column; align-items: center; min-width: 2.6em; padding: 4px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); line-height: 1.4; }
+.seg code { border: 0; background: none; padding: 0; font-size: 13px; color: var(--muted); }
+.seg span { font-size: 18px; }
+.seg.warn { border-color: #f97316; }
+.seg.pending span { color: var(--muted); }
+.seg.bad span, .ng { color: #ef4444; }
+.ok { color: #22c55e; }

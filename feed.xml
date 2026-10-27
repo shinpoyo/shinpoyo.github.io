@@ -4,8 +4,16 @@
   <link href="https://shinpoyo.com/articles/"/>
   <link rel="self" href="https://shinpoyo.com/feed.xml"/>
   <id>https://shinpoyo.com/</id>
-  <updated>2026-10-26T00:00:00+09:00</updated>
+  <updated>2026-10-27T00:00:00+09:00</updated>
   <author><name>shinpoyo</name></author>
+  <entry>
+    <title>ローマ字入力で迷いやすい文字の打ち方 — 「ん」「っ」「ゃ」からカタカナ語まで（確認ツール付き）</title>
+    <link href="https://shinpoyo.com/articles/romaji/"/>
+    <id>https://shinpoyo.com/articles/romaji/</id>
+    <published>2026-10-27T00:00:00+09:00</published>
+    <updated>2026-10-27T00:00:00+09:00</updated>
+    <summary>「ん」「っ」「ゃ」やカタカナ語の打ち方のまとめ。打ったローマ字の区切られ方と、言葉のいちばん短い打ち方をその場で確かめられるツール付き。</summary>
+  </entry>
   <entry>
     <title>ゲームを作るようになったわけ — 風船タップから、ラーメンとオセロまで</title>
     <link href="https://shinpoyo.com/articles/why-i-make-games/"/>
@@ -39,14 +47,6 @@
     <summary>生成AIの「もっともらしい嘘」が起こる理由と、出やすいパターン、見破るためのコツ。</summary>
   </entry>
   <entry>
-    <title>小さい「っ」「ゃ」やカタカナ語はどう打つ？ — ローマ字入力で迷いやすい文字</title>
-    <link href="https://shinpoyo.com/articles/romaji-tricky/"/>
-    <id>https://shinpoyo.com/articles/romaji-tricky/</id>
-    <published>2026-10-13T00:00:00+09:00</published>
-    <updated>2026-10-13T00:00:00+09:00</updated>
-    <summary>小さい文字の単独入力、「っ」の打ち方、何通りもある打ち方、「ふぁ」「てぃ」などカタカナ語の音。</summary>
-  </entry>
-  <entry>
     <title>タイピングを速くする練習のしかた — 正確さが先、速さはあと</title>
     <link href="https://shinpoyo.com/articles/typing-practice/"/>
     <id>https://shinpoyo.com/articles/typing-practice/</id>
@@ -55,19 +55,11 @@
     <summary>ホームポジション・手元を見ない・正確さ優先・毎日少しずつ。速くなるための練習の順番。</summary>
   </entry>
   <entry>
-    <title>「ニンニク」が「にんいく」になる理由 — ローマ字入力の「ん」の打ち方</title>
-    <link href="https://shinpoyo.com/articles/romaji-n/"/>
-    <id>https://shinpoyo.com/articles/romaji-n/</id>
-    <published>2026-10-12T00:00:00+09:00</published>
-    <updated>2026-10-12T00:00:00+09:00</updated>
-    <summary>ninniku と打つと「にんいく」になる理由と、「ん」を n 1回で打てるとき・nn が必要なときの見分け方。</summary>
-  </entry>
-  <entry>
     <title>マシマシ打ができるまで — 2つの試作を1つにまとめた話</title>
     <link href="https://shinpoyo.com/articles/making-mashimashida/"/>
     <id>https://shinpoyo.com/articles/making-mashimashida/</id>
     <published>2026-10-12T00:00:00+09:00</published>
-    <updated>2026-10-12T00:00:00+09:00</updated>
+    <updated>2026-10-27T00:00:00+09:00</updated>
     <summary>見た目の試作とロジックの試作を統合し、要素を足すより削ることで遊びやすくしていった制作記。</summary>
   </entry>
   <entry>

@@ -14,6 +14,7 @@
   - game_url / genre / lang: 作品ページ用。遊ぶ URL（例：mashimashida/）・ジャンル・対応言語（例：ja,en）
   - catch: 作品ページ用。「ほかの作品」に出す一言の紹介
   - updated: 作品ページ用。ゲーム本体の最終更新日（YYYY-MM-DD）
+  - redirect: 移転先（例：articles/romaji/#n）。本文は使わず、移転先へ移るだけのページを書き出す（sitemap・記事一覧には載らない）
 - 本文に `<!-- ARTICLES -->` と書くと記事一覧（新しい順）、`<!-- ARTICLES:3 -->` で最新3件に置き換わる
 - 記事ページは本文の先頭に公開日、末尾にシェアのリンクと「ほかの記事」を自動で付ける
 - 作品ページ（game_url があるページ）は、見出しの下に作った人と最終更新日、本文の途中と末尾に広告枠、末尾にシェアのリンクと「ほかの作品」を自動で付ける
@@ -227,6 +228,21 @@ def expand(body, meta, articles, works=()):
     return body
 
 
+REDIRECT = """<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>{title}</title>
+<link rel="canonical" href="{canonical}">
+<meta http-equiv="refresh" content="0; url={url}">
+</head>
+<body>
+<p>このページは移動しました。<a href="{url}">{title}</a></p>
+</body>
+</html>
+"""
+
+
 def render(meta, body, titles):
     path = meta.get("path", "")
     title = meta["title"] if not path else f"{meta['title']} | shinpoyo"
@@ -249,6 +265,12 @@ def render(meta, body, titles):
 def main():
     lastmod = {}
     pages = [(src, *parse(src)) for src in sorted((ROOT / "_src").glob("*.html"))]
+    for src, meta, _ in [p for p in pages if p[1].get("redirect")]:
+        out = ROOT / meta["path"] / "index.html"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(REDIRECT.format(url=SITE + meta["redirect"], canonical=SITE + meta["redirect"].split("#")[0], title=html.escape(meta["title"])), encoding="utf-8")
+        print("wrote", out.relative_to(ROOT), "(redirect)")
+    pages = [p for p in pages if not p[1].get("redirect")]
     for src, meta, _ in pages:
         meta["modified"] = git_date(src)
     titles = {m.get("path", ""): crumb_name(m) for _, m, _ in pages}
