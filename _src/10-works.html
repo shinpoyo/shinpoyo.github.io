@@ -1,38 +1,75 @@
 path: works/
 title: 作品一覧
-description: shinpoyo が作ったブラウザゲーム・アプリの一覧。マシマシ打、けしカス、SMUDGE、ねーちゃんとオセロ、はるしねーちゃん、Bullet Reflector。
+description: shinpoyo が作った、無料で遊べるブラウザゲームの一覧。遊び方やジャンルから選べます。マシマシ打、けしカス、SMUDGE、ねーちゃんとオセロ、はるしねーちゃん、Bullet Reflector。
 nav: works
 ---
 <main>
   <p class="breadcrumb"><a href="/">トップ</a> › 作品一覧</p>
   <h1>作品一覧</h1>
-  <p class="lead">すべてブラウザで動きます。インストールや会員登録はいりません。</p>
+  <p class="lead">どれも無料で、ブラウザだけで遊べます。インストールや会員登録はいりません。遊び方や気分で選んでください。</p>
+
+  <h2>遊び方で選ぶ</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>こんなときに</th><th>作品</th></tr></thead>
+    <tbody>
+      <tr><td>スマホで、さっと遊びたい</td><td><a href="/works/haru-nechan-quiz/">はるしねーちゃん</a>・<a href="/works/reversi-with-sis/">ねーちゃんとオセロ</a>・<a href="/works/smudge/">SMUDGE</a>・<a href="/works/bullet-reflector/">Bullet Reflector</a></td></tr>
+      <tr><td>PC のキーボードで、じっくり</td><td><a href="/works/mashimashida/">マシマシ打</a>（タイピング。キーボードが必要です）</td></tr>
+      <tr><td>放っておいても進むのがいい</td><td><a href="/works/keshikasu/">けしカス</a>（ゲームを閉じている間も進みます）</td></tr>
+      <tr><td>毎日ちょっとずつ遊びたい</td><td><a href="/works/haru-nechan-quiz/">はるしねーちゃん</a>（毎日変わる「今日の7問」）・<a href="/works/keshikasu/">けしカス</a>（毎日のごほうび）</td></tr>
+      <tr><td>記録をほかの人とくらべたい</td><td><a href="/works/mashimashida/">マシマシ打</a>（全国完飲番付）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>タイピング</h2>
+  <p class="small muted">キーボードで打って遊ぶゲーム。</p>
+  <ul class="works">
+    <li class="work"><a href="/works/mashimashida/"><img src="/assets/img/mashimashida.jpg" alt="マシマシ打のプレイ画面" width="1280" height="720" loading="lazy"></a>
+      <div class="body"><h3>マシマシ打</h3><p>山盛りラーメンの「コール」を、ローマ字で即答するタイピングゲーム。</p><div class="links"><a href="/works/mashimashida/">遊び方を見る</a><a href="/mashimashida/">遊ぶ</a></div></div></li>
+  </ul>
+
+  <h2>パズル・クイズ</h2>
+  <p class="small muted">考えて、見破って、解くゲーム。</p>
+  <ul class="works">
+    <li class="work"><a href="/works/smudge/"><img src="/assets/img/smudge.jpg" alt="SMUDGE の盤面" width="1280" height="720" loading="lazy"></a>
+      <div class="body"><h3>SMUDGE</h3><div class="tags"><span class="tag wip">体験版</span></div><p>指の跡からロック解除の線を推理するパズル。</p><div class="links"><a href="/works/smudge/">遊び方を見る</a><a href="/smudge/">遊ぶ</a></div></div></li>
+    <li class="work"><a href="/works/haru-nechan-quiz/"><img src="/assets/img/haru-nechan-quiz.jpg" alt="はるしねーちゃんの画面" width="1280" height="720" loading="lazy"></a>
+      <div class="body"><h3>はるしねーちゃん</h3><div class="tags"><span class="tag wip">ベータ版</span></div><p>ねーちゃんの雑学が、嘘か本当かを見破るクイズ。</p><div class="links"><a href="/works/haru-nechan-quiz/">遊び方を見る</a><a href="/haru_nechan_quiz_app/">遊ぶ</a></div></div></li>
+  </ul>
+
+  <h2>テーブルゲーム</h2>
+  <p class="small muted">盤を使ったゲーム。</p>
+  <ul class="works">
+    <li class="work"><a href="/works/reversi-with-sis/"><img src="/assets/img/sis-othello.jpg" alt="ねーちゃんとオセロの画面" width="1280" height="720" loading="lazy"></a>
+      <div class="body"><h3>ねーちゃんとオセロ</h3><div class="tags"><span class="tag wip">ベータ版</span></div><p>ねーちゃんの機嫌を損ねずに、ギリギリで勝つ接待オセロ。</p><div class="links"><a href="/works/reversi-with-sis/">遊び方を見る</a><a href="/Reversi-with-Sis/">遊ぶ</a></div></div></li>
+  </ul>
+
+  <h2>アクション</h2>
+  <p class="small muted">タイミングと反射神経で遊ぶゲーム。</p>
+  <ul class="works">
+    <li class="work"><a href="/works/bullet-reflector/"><img src="/assets/img/bullet-reflector.jpg" alt="Bullet Reflector の画面" width="1280" height="720" loading="lazy"></a>
+      <div class="body"><h3>Bullet Reflector</h3><div class="tags"><span class="tag wip">ベータ版</span></div><p>弾を跳ね返すだけで戦う、ジャストパリィのアクション。</p><div class="links"><a href="/works/bullet-reflector/">遊び方を見る</a><a href="/Bullet-Reflector/">遊ぶ</a></div></div></li>
+  </ul>
+
+  <h2>放置・育成</h2>
+  <p class="small muted">少しずつ育てて、集めるゲーム。</p>
+  <ul class="works">
+    <li class="work"><a href="/works/keshikasu/"><img src="/assets/img/keshikasu.jpg" alt="けしカスの画面" width="1280" height="720" loading="lazy"></a>
+      <div class="body"><h3>けしカス</h3><p>消しゴムのカスを育てて、図鑑をうめる放置クリッカー。</p><div class="links"><a href="/works/keshikasu/">遊び方を見る</a><a href="/keshikasu/">遊ぶ</a></div></div></li>
+  </ul>
+
+  <h2>作品の比較</h2>
   <div class="table-wrap">
     <table>
       <thead><tr><th>作品</th><th>ジャンル</th><th>おすすめの端末</th><th>記録の保存</th></tr></thead>
       <tbody>
         <tr><td><a href="/works/mashimashida/">マシマシ打</a></td><td>タイピング</td><td>PC（キーボード必須）</td><td>端末のブラウザ内</td></tr>
         <tr><td><a href="/works/keshikasu/">けしカス</a></td><td>放置クリッカー</td><td>スマホ・PC</td><td>端末のブラウザ内</td></tr>
-        <tr><td><a href="/works/smudge/">SMUDGE</a></td><td>推理パズル</td><td>スマホ・PC</td><td>端末のブラウザ内</td></tr>
+        <tr><td><a href="/works/smudge/">SMUDGE</a>（体験版）</td><td>推理パズル</td><td>スマホ・PC</td><td>端末のブラウザ内</td></tr>
         <tr><td><a href="/works/reversi-with-sis/">ねーちゃんとオセロ</a>（ベータ版）</td><td>オセロ・接待</td><td>スマホ・PC</td><td>保存しない</td></tr>
         <tr><td><a href="/works/haru-nechan-quiz/">はるしねーちゃん</a>（ベータ版）</td><td>知ったかぶり見破りクイズ</td><td>スマホ・PC</td><td>端末のブラウザ内</td></tr>
         <tr><td><a href="/works/bullet-reflector/">Bullet Reflector</a>（ベータ版）</td><td>弾反射アクション</td><td>スマホ・PC</td><td>端末のブラウザ内</td></tr>
       </tbody>
     </table>
   </div>
-  <ul class="works">
-    <li class="work"><a href="/works/mashimashida/"><img src="/assets/img/mashimashida.jpg" alt="マシマシ打のプレイ画面" width="1280" height="720" loading="lazy"></a>
-      <div class="body"><h3>マシマシ打</h3><p>山盛りラーメンの「コール」特化タイピングゲーム。</p><div class="links"><a href="/works/mashimashida/">紹介ページ</a><a href="/mashimashida/">遊ぶ</a></div></div></li>
-    <li class="work"><a href="/works/keshikasu/"><img src="/assets/img/keshikasu.jpg" alt="けしカスの画面" width="1280" height="720" loading="lazy"></a>
-      <div class="body"><h3>けしカス</h3><p>消しゴムのカスを育てる放置クリッカー。</p><div class="links"><a href="/works/keshikasu/">紹介ページ</a><a href="/keshikasu/">遊ぶ</a></div></div></li>
-    <li class="work"><a href="/works/smudge/"><img src="/assets/img/smudge.jpg" alt="SMUDGE の盤面" width="1280" height="720" loading="lazy"></a>
-      <div class="body"><h3>SMUDGE</h3><p>指の跡からロック解除パターンを推理するパズル（体験版）。</p><div class="links"><a href="/works/smudge/">紹介ページ</a><a href="/smudge/">遊ぶ</a></div></div></li>
-    <li class="work"><a href="/works/reversi-with-sis/"><img src="/assets/img/sis-othello.jpg" alt="ねーちゃんとオセロの画面" width="1280" height="720" loading="lazy"></a>
-      <div class="body"><h3>ねーちゃんとオセロ</h3><div class="tags"><span class="tag wip">ベータ版</span></div><p>姉ちゃんの機嫌を損ねずにオセロで勝つ接待ゲーム。</p><div class="links"><a href="/works/reversi-with-sis/">紹介ページ</a><a href="/Reversi-with-Sis/">遊ぶ</a></div></div></li>
-    <li class="work"><a href="/works/haru-nechan-quiz/"><img src="/assets/img/haru-nechan-quiz.jpg" alt="はるしねーちゃんの画面" width="1280" height="720" loading="lazy"></a>
-      <div class="body"><h3>はるしねーちゃん</h3><div class="tags"><span class="tag wip">ベータ版</span></div><p>ねーちゃんの雑学が、嘘か本当かを見破るクイズ。</p><div class="links"><a href="/works/haru-nechan-quiz/">紹介ページ</a><a href="/haru_nechan_quiz_app/">遊ぶ</a></div></div></li>
-    <li class="work"><a href="/works/bullet-reflector/"><img src="/assets/img/bullet-reflector.jpg" alt="Bullet Reflector の画面" width="1280" height="720" loading="lazy"></a>
-      <div class="body"><h3>Bullet Reflector</h3><div class="tags"><span class="tag wip">ベータ版</span></div><p>弾を跳ね返して敵を崩す弾幕アクション。</p><div class="links"><a href="/works/bullet-reflector/">紹介ページ</a><a href="/Bullet-Reflector/">遊ぶ</a></div></div></li>
-  </ul>
   <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
 </main>

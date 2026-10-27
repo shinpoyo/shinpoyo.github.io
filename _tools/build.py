@@ -12,8 +12,12 @@
   - summary: 記事一覧に出す1〜2文の紹介
   - crumb: パンくず（構造化データ）での短い名前（省略時は title の「 — 」より前）
   - game_url / genre / lang: 作品ページ用。遊ぶ URL（例：mashimashida/）・ジャンル・対応言語（例：ja,en）
+  - catch: 作品ページ用。「ほかの作品」に出す一言の紹介
+  - updated: 作品ページ用。ゲーム本体の最終更新日（YYYY-MM-DD）
 - 本文に `<!-- ARTICLES -->` と書くと記事一覧（新しい順）、`<!-- ARTICLES:3 -->` で最新3件に置き換わる
 - 記事ページは本文の先頭に公開日、末尾にシェアのリンクと「ほかの記事」を自動で付ける
+- 作品ページ（game_url があるページ）は、見出しの下に作った人と最終更新日、本文の途中と末尾に広告枠、末尾にシェアのリンクと「ほかの作品」を自動で付ける
+- 記事は feed.xml（Atom）にも書き出す
 - 各ページに構造化データ（JSON-LD）を付け、sitemap.xml には git の最終コミット日を lastmod として入れる
 - `_` で始まるフォルダは GitHub Pages（Jekyll）で公開されない
 """
@@ -62,6 +66,7 @@ HEAD = """<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/atom+xml" title="shinpoyo の記事" href="/feed.xml">
 {jsonld}</head>
 <body>
 <header class="site-header"><div class="inner">
@@ -161,15 +166,41 @@ def jsonld(meta, titles):
         for d in data)
 
 
-def share_links(meta):
+def share_links(meta, label="この記事をシェア"):
     url = quote(SITE + meta["path"], safe="")
     text = quote(meta["title"], safe="")
-    return (f'<p class="share small">この記事をシェア：'
+    return (f'<p class="share small">{label}：'
             f'<a href="https://x.com/intent/post?text={text}&amp;url={url}" target="_blank" rel="noopener">X（Twitter）</a>'
             f'<a href="https://b.hatena.ne.jp/entry/s/{"shinpoyo.com/" + meta["path"]}" target="_blank" rel="noopener">はてなブックマーク</a></p>')
 
 
-def expand(body, meta, articles):
+AD_SLOT = '<aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>'
+
+
+def insert_before_nth_h2(body, n, html_block):
+    """本文の n 番目の <h2 の直前に差し込む（なければ何もしない）"""
+    idx = -1
+    for _ in range(n):
+        idx = body.find("<h2", idx + 1)
+        if idx < 0:
+            return body
+    return body[:idx] + html_block + "\n\n  " + body[idx:]
+
+
+def other_works(meta, works):
+    items = []
+    for w in works:
+        if w["path"] == meta["path"]:
+            continue
+        items.append(
+            f'  <li class="work"><a href="/{w["path"]}"><img src="/{w.get("image", "assets/img/ogp.jpg")}" alt="" width="1280" height="720" loading="lazy"></a>'
+            f'<div class="body"><h3><a href="/{w["path"]}">{html.escape(crumb_name(w))}</a></h3>'
+            f'<p>{html.escape(w.get("catch", ""))}</p></div></li>'
+        )
+    return '<h2>ほかの作品</h2>\n<ul class="works works-mini">\n' + "\n".join(items) + "\n</ul>"
+
+
+def expand(body, meta, articles, works=()):
     body = re.sub(r"<!-- ARTICLES(?::(\d+))? -->", lambda m: article_list(articles, int(m.group(1)) if m.group(1) else None), body)
     if meta.get("date"):
         d = meta["date"]
@@ -180,6 +211,19 @@ def expand(body, meta, articles):
         if others:
             more += "<h2>ほかの記事</h2>\n" + article_list(others)
         body = body.replace("<!-- MORE -->", more)
+        body = insert_before_nth_h2(body, 3, AD_SLOT)
+    if meta.get("game_url"):
+        line = '<p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>'
+        if meta.get("updated"):
+            u = meta["updated"]
+            line += f'　／　ゲームの最終更新：<time datetime="{u}">{u.replace("-", ".")}</time>'
+        line += "</p>"
+        body = body.replace("</h1>", "</h1>\n  " + line, 1)
+        body = insert_before_nth_h2(body, 2, AD_SLOT)
+        tail = share_links(meta, "この作品をシェア") + "\n" + other_works(meta, works) + "\n"
+        last_ad = body.rfind('<aside class="ad"')
+        at = last_ad if last_ad >= 0 else body.rfind("</main>")
+        body = body[:at] + tail + "  " + body[at:]
     return body
 
 
@@ -209,8 +253,9 @@ def main():
         meta["modified"] = git_date(src)
     titles = {m.get("path", ""): crumb_name(m) for _, m, _ in pages}
     articles = sorted((m for _, m, _ in pages if m.get("date")), key=lambda m: (m["date"], m["path"]), reverse=True)
+    works = [m for _, m, _ in pages if m.get("game_url")]
     for src, meta, body in pages:
-        body = expand(body, meta, articles)
+        body = expand(body, meta, articles, works)
         out = ROOT / meta.get("path", "") / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(render(meta, body, titles), encoding="utf-8")
@@ -224,6 +269,40 @@ def main():
     sitemap.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
     print("wrote sitemap.xml")
+    write_feed(articles)
+
+
+def write_feed(articles):
+    """記事の Atom フィード（新しい順に 20 件）"""
+    def esc(t):
+        return html.escape(t, quote=True)
+    updated = max(max(a["date"], a["modified"]) for a in articles)
+    entries = []
+    for a in articles[:20]:
+        url = SITE + a["path"]
+        entries.append(
+            "  <entry>\n"
+            f"    <title>{esc(a['title'])}</title>\n"
+            f'    <link href="{url}"/>\n'
+            f"    <id>{url}</id>\n"
+            f"    <published>{a['date']}T00:00:00+09:00</published>\n"
+            f"    <updated>{max(a['date'], a['modified'])}T00:00:00+09:00</updated>\n"
+            f"    <summary>{esc(a.get('summary', a['description']))}</summary>\n"
+            "  </entry>"
+        )
+    feed = (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<feed xmlns="http://www.w3.org/2005/Atom">\n'
+        "  <title>shinpoyo の記事</title>\n"
+        f'  <link href="{SITE}articles/"/>\n'
+        f'  <link rel="self" href="{SITE}feed.xml"/>\n'
+        f"  <id>{SITE}</id>\n"
+        f"  <updated>{updated}T00:00:00+09:00</updated>\n"
+        "  <author><name>shinpoyo</name></author>\n"
+        + "\n".join(entries) + "\n</feed>\n"
+    )
+    (ROOT / "feed.xml").write_text(feed, encoding="utf-8")
+    print("wrote feed.xml")
 
 
 if __name__ == "__main__":

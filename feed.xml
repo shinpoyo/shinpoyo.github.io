@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>shinpoyo の記事</title>
+  <link href="https://shinpoyo.com/articles/"/>
+  <link rel="self" href="https://shinpoyo.com/feed.xml"/>
+  <id>https://shinpoyo.com/</id>
+  <updated>2026-10-26T00:00:00+09:00</updated>
+  <author><name>shinpoyo</name></author>
+  <entry>
+    <title>ゲームを作るようになったわけ — 風船タップから、ラーメンとオセロまで</title>
+    <link href="https://shinpoyo.com/articles/why-i-make-games/"/>
+    <id>https://shinpoyo.com/articles/why-i-make-games/</id>
+    <published>2026-10-26T00:00:00+09:00</published>
+    <updated>2026-10-26T00:00:00+09:00</updated>
+    <summary>AIエージェントで作った風船ゲームから、ラーメン・消しゴム・パターンロック・縛りプレイまで。作品ごとの「作ったきっかけ」。</summary>
+  </entry>
+  <entry>
+    <title>音声ファイルなしで効果音を鳴らす — Web Audio API の基本</title>
+    <link href="https://shinpoyo.com/articles/web-audio-se/"/>
+    <id>https://shinpoyo.com/articles/web-audio-se/</id>
+    <published>2026-10-17T00:00:00+09:00</published>
+    <updated>2026-10-17T00:00:00+09:00</updated>
+    <summary>オシレーターで音を作り、音程と音量を変化させて効果音にする。Web Audio API の基本と注意点。</summary>
+  </entry>
+  <entry>
+    <title>ねーちゃんとオセロができるまで — 「勝ちすぎてはいけないオセロ」を作った話</title>
+    <link href="https://shinpoyo.com/articles/making-sis-othello/"/>
+    <id>https://shinpoyo.com/articles/making-sis-othello/</id>
+    <published>2026-10-17T00:00:00+09:00</published>
+    <updated>2026-10-26T00:00:00+09:00</updated>
+    <summary>優勢になった途端、ねーちゃんがちゃぶ台返し。あの日の実体験から生まれた「接待オセロ」の制作記。</summary>
+  </entry>
+  <entry>
+    <title>AIの「ハルシネーション」とは？ — もっともらしい嘘を見破るコツ</title>
+    <link href="https://shinpoyo.com/articles/ai-hallucination/"/>
+    <id>https://shinpoyo.com/articles/ai-hallucination/</id>
+    <published>2026-10-17T00:00:00+09:00</published>
+    <updated>2026-10-26T00:00:00+09:00</updated>
+    <summary>生成AIの「もっともらしい嘘」が起こる理由と、出やすいパターン、見破るためのコツ。</summary>
+  </entry>
+  <entry>
+    <title>小さい「っ」「ゃ」やカタカナ語はどう打つ？ — ローマ字入力で迷いやすい文字</title>
+    <link href="https://shinpoyo.com/articles/romaji-tricky/"/>
+    <id>https://shinpoyo.com/articles/romaji-tricky/</id>
+    <published>2026-10-13T00:00:00+09:00</published>
+    <updated>2026-10-13T00:00:00+09:00</updated>
+    <summary>小さい文字の単独入力、「っ」の打ち方、何通りもある打ち方、「ふぁ」「てぃ」などカタカナ語の音。</summary>
+  </entry>
+  <entry>
+    <title>タイピングを速くする練習のしかた — 正確さが先、速さはあと</title>
+    <link href="https://shinpoyo.com/articles/typing-practice/"/>
+    <id>https://shinpoyo.com/articles/typing-practice/</id>
+    <published>2026-10-12T00:00:00+09:00</published>
+    <updated>2026-10-12T00:00:00+09:00</updated>
+    <summary>ホームポジション・手元を見ない・正確さ優先・毎日少しずつ。速くなるための練習の順番。</summary>
+  </entry>
+  <entry>
+    <title>「ニンニク」が「にんいく」になる理由 — ローマ字入力の「ん」の打ち方</title>
+    <link href="https://shinpoyo.com/articles/romaji-n/"/>
+    <id>https://shinpoyo.com/articles/romaji-n/</id>
+    <published>2026-10-12T00:00:00+09:00</published>
+    <updated>2026-10-12T00:00:00+09:00</updated>
+    <summary>ninniku と打つと「にんいく」になる理由と、「ん」を n 1回で打てるとき・nn が必要なときの見分け方。</summary>
+  </entry>
+  <entry>
+    <title>マシマシ打ができるまで — 2つの試作を1つにまとめた話</title>
+    <link href="https://shinpoyo.com/articles/making-mashimashida/"/>
+    <id>https://shinpoyo.com/articles/making-mashimashida/</id>
+    <published>2026-10-12T00:00:00+09:00</published>
+    <updated>2026-10-12T00:00:00+09:00</updated>
+    <summary>見た目の試作とロジックの試作を統合し、要素を足すより削ることで遊びやすくしていった制作記。</summary>
+  </entry>
+  <entry>
+    <title>個人開発のゲームを独自ドメインで公開する — GitHub Pages と Cloudflare</title>
+    <link href="https://shinpoyo.com/articles/custom-domain/"/>
+    <id>https://shinpoyo.com/articles/custom-domain/</id>
+    <published>2026-10-12T00:00:00+09:00</published>
+    <updated>2026-10-12T00:00:00+09:00</updated>
+    <summary>GitHub Pages のゲームを独自ドメインの下にまとめて公開した手順と、つまずいた点・セキュリティ設定。</summary>
+  </entry>
+</feed>
