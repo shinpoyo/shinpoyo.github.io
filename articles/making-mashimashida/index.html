@@ -23,6 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/atom+xml" title="shinpoyo の記事" href="/feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://shinpoyo.com/"}, {"@type": "ListItem", "position": 2, "name": "記事", "item": "https://shinpoyo.com/articles/"}, {"@type": "ListItem", "position": 3, "name": "マシマシ打ができるまで", "item": "https://shinpoyo.com/articles/making-mashimashida/"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "マシマシ打ができるまで — 2つの試作を1つにまとめた話", "description": "タイピングゲーム『マシマシ打』の制作記。見た目の試作とロジックの試作を1つにまとめ、遊びにくい要素を削り、プレイ画面をシンプルにしていった過程を振り返ります。", "image": "https://shinpoyo.com/assets/img/mashimashida-ticket.jpg", "datePublished": "2026-10-12", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/making-mashimashida/", "inLanguage": "ja"}</script>
 </head>
@@ -61,6 +62,8 @@
 
   <h2 id="merge">いいとこ取りでまとめる</h2>
   <p>そこで、見た目の試作を土台にして、ロジックの試作の判定や出題の仕組みを TypeScript に書き直して組み込みました。ローマ字の判定は細かい決まりが多いので、移植したあとに自動テストを書き、「<code>ninniku</code> は『にんいく』になる」といった実際の日本語入力と同じふるまいになっているかを確かめています（この「ん」の話は<a href="/articles/romaji-n/">別の記事</a>にまとめました）。</p>
+
+  <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
 
   <h2 id="cut">足すより削る</h2>
   <p>試作を合わせると、要素がどんどん増えていきます。実際に遊んでみて、遊びの邪魔になるものは思い切って削りました。</p>

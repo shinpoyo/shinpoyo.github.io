@@ -23,6 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/atom+xml" title="shinpoyo の記事" href="/feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://shinpoyo.com/"}, {"@type": "ListItem", "position": 2, "name": "記事", "item": "https://shinpoyo.com/articles/"}, {"@type": "ListItem", "position": 3, "name": "個人開発のゲームを独自ドメインで公開する", "item": "https://shinpoyo.com/articles/custom-domain/"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "個人開発のゲームを独自ドメインで公開する — GitHub Pages と Cloudflare", "description": "GitHub Pages で公開しているゲームを、独自ドメインでまとめて公開する手順。ユーザーサイトの仕組み、DNS の設定、つまずいた点、やっておきたいセキュリティ設定まで。", "image": "https://shinpoyo.com/assets/img/ogp.jpg", "datePublished": "2026-10-12", "author": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "publisher": {"@type": "Person", "name": "shinpoyo", "url": "https://shinpoyo.com/about/"}, "mainEntityOfPage": "https://shinpoyo.com/articles/custom-domain/", "inLanguage": "ja"}</script>
 </head>
@@ -57,6 +58,8 @@
 
   <h2 id="buy">ドメインを取る</h2>
   <p>ドメインは Cloudflare Registrar で取りました。上乗せのない価格で更新できるのと、DNS の設定画面がわかりやすいのが理由です。取ったらすぐに、アカウントの2要素認証を設定しておきましょう（ドメインを乗っ取られると、サイトもまるごと奪われてしまいます）。</p>
+
+  <aside class="ad" data-ad hidden aria-label="広告"><p>広告</p></aside>
 
   <h2 id="steps">設定の手順</h2>
   <ol>

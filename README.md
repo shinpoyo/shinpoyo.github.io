@@ -12,7 +12,7 @@ shinpoyo の個人サイト **https://shinpoyo.com/** 。各プロジェクト�
 | `/about/` `/contact/` `/privacy/` | このサイトについて・お問い合わせ・プライバシーポリシー |
 | `assets/` | 共通 CSS（`site.css`）と画像 |
 | `ads.js` | 広告（AdSense）の設定。ID が空なら何も出さない |
-| `ads.txt` `robots.txt` `sitemap.xml` | 広告・検索エンジン向け |
+| `ads.txt` `robots.txt` `sitemap.xml` `feed.xml` | 広告・検索エンジン・フィード向け（`sitemap.xml` と `feed.xml` は自動で書き出す） |
 
 ## ページの編集
 
@@ -33,6 +33,7 @@ python3 _tools/make_icons.py   # アイコン（favicon.ico など）を作り�
 - 広告（AdSense）の導入手順：[docs/adsense.md](docs/adsense.md)
 - アクセス解析の導入手順：[docs/analytics.md](docs/analytics.md)
 - サイトの品質チェックと改善の順番：[docs/quality-audit.md](docs/quality-audit.md)
+- AdSense で収益を上げているサイトの特徴 20 と反映状況：[docs/adsense-success-features.md](docs/adsense-success-features.md)
 - Search Console の確認手順：[docs/search-console.md](docs/search-console.md)
 - 作業履歴：[docs/worklog.md](docs/worklog.md)
 
