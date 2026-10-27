@@ -35,6 +35,7 @@ python3 _tools/make_icons.py   # アイコン（favicon.ico など）を作り�
 - サイトの品質チェックと改善の順番：[docs/quality-audit.md](docs/quality-audit.md)
 - AdSense で収益を上げているサイトの特徴 20 と反映状況：[docs/adsense-success-features.md](docs/adsense-success-features.md)
 - Search Console の確認手順：[docs/search-console.md](docs/search-console.md)
+- ゲームのレビューと改善点（2026-10-27）：[docs/game-review-2026-10-27.md](docs/game-review-2026-10-27.md)
 - 作業履歴：[docs/worklog.md](docs/worklog.md)
 
 © 2026 shinpoyo. All rights reserved.
