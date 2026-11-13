@@ -10,7 +10,6 @@ shinpoyo の個人サイト **https://shinpoyo.com/** 。各プロジェクト�
 | `/works/` | 作品一覧と、作品ごとの紹介ページ（遊び方・FAQ など） |
 | `/articles/` | 記事（`_src` で `date:` を付けたページが自動で一覧に載る） |
 | `/about/` `/contact/` `/privacy/` | このサイトについて・お問い合わせ・プライバシーポリシー |
-| `/alchemy-td/` | ゲーム「宵闇の錬金塔」（マージ×タワーディフェンス）。`index.html` 1 ファイルで動く |
 | `assets/` | 共通 CSS（`site.css`）と画像 |
 | `ads.js` | 広告（AdSense）の設定。ID が空なら何も出さない |
 | `ads.txt` `robots.txt` `sitemap.xml` `feed.xml` | 広告・検索エンジン・フィード向け（`sitemap.xml` と `feed.xml` は自動で書き出す） |
