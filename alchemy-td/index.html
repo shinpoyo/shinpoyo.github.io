@@ -81,9 +81,9 @@ button.b.s{font-size:calc(var(--u)*14);padding:calc(var(--u)*9) calc(var(--u)*24
     <div class="sub">MERGE × TOWER DEFENSE</div>
     <ul class="how">
       <li><i>一</i>下のボタンで<b>火・水・土・風</b>を呼び出す</li>
-      <li><i>二</i>ちがう元素を<b>重ねる</b>と新しい元素に。おなじ元素どうしは<b>★が上がる</b></li>
-      <li><i>三</i>できた元素を<b>道のそばの魔法陣</b>に置くと、塔になって戦う</li>
-      <li><i>四</i><b>20 の夜波</b>を退ければ夜明け。元素は全 24 種</li>
+      <li><i>二</i>元素を<b>重ねる</b>と新しい元素に。<b>おなじもの同士</b>でも変わる（水＋水＝池）</li>
+      <li><i>三</i>できた元素を<b>魔法陣</b>に置くと塔になる。沼などの<b>罠は道の上</b>に置く</li>
+      <li><i>四</i><b>20 の夜波</b>を退ければ夜明け。元素は全 42 種、★はランク</li>
     </ul>
     <button class="b" id="bStart">はじめる</button>
   </div>
@@ -132,49 +132,83 @@ function resize(){
 addEventListener('resize',resize);resize();
 
 /* ---------------- 元素（アイテム）の定義 ----------------
-   kind: bolt=弾 / chain=連鎖する稲妻 / pulse=周囲への波動 / beam=照射 / pierce=貫通
-   dmg は ★1 の値。★2 で 2.3 倍、★3 で 5.3 倍 */
+   kind: bolt=弾 / chain=連鎖する稲妻 / pulse=周囲への波動 / beam=照射 / pierce=貫通 / trap=道に置く罠
+   t がランク（★の数）。値段は 1 ランクごとに 2 倍 */
 const ITEMS={
-  fire:    {g:'火',name:'火',      t:1,c:'#ff6a3d',kind:'bolt', dmg:7,  rate:1,   range:105,dot:3,dotT:2,              desc:'当てた敵を燃やす'},
-  water:   {g:'水',name:'水',      t:1,c:'#4aa8ff',kind:'bolt', dmg:4,  rate:1,   range:105,slow:.25,slowT:1.5,        desc:'当てた敵を遅くする'},
-  earth:   {g:'土',name:'土',      t:1,c:'#c08a4a',kind:'bolt', dmg:13, rate:.5,  range:95, splash:34,                 desc:'重い一撃。まわりも巻きこむ'},
-  wind:    {g:'風',name:'風',      t:1,c:'#7df0c0',kind:'bolt', dmg:2.2,rate:3.2, range:125,                           desc:'弱いが、とても速く撃つ'},
-  steam:   {g:'蒸',name:'蒸気',    t:2,c:'#cfd8e8',kind:'pulse',dmg:10, rate:1,   range:80,                            desc:'まわりの敵すべてを蒸す'},
-  lava:    {g:'熔',name:'溶岩',    t:2,c:'#ff4a1a',kind:'bolt', dmg:22, rate:.55, range:110,splash:42,dot:6,dotT:3,    desc:'爆ぜて、広く燃やす'},
-  bolt:    {g:'雷',name:'雷',      t:2,c:'#ffe45c',kind:'chain',dmg:13, rate:1,   range:120,chain:3,                   desc:'敵から敵へ跳ねる稲妻'},
-  venom:   {g:'毒',name:'毒',      t:2,c:'#8be04a',kind:'bolt', dmg:4,  rate:1.2, range:115,dot:10,dotT:4,             desc:'じわじわ効く猛毒'},
-  ice:     {g:'氷',name:'氷',      t:2,c:'#8fe6ff',kind:'bolt', dmg:9,  rate:1.1, range:115,slow:.45,slowT:2,          desc:'敵を強く凍えさせる'},
-  sand:    {g:'砂',name:'砂',      t:2,c:'#e6c88a',kind:'bolt', dmg:3.6,rate:5,   range:125,                           desc:'砂つぶての連射'},
-  engine:  {g:'機',name:'機関',    t:3,c:'#ffb070',kind:'bolt', dmg:6.5,rate:9,   range:135,                           desc:'止まらない機関砲'},
-  blizzard:{g:'雪',name:'吹雪',    t:3,c:'#bfeaff',kind:'pulse',dmg:16, rate:.9,  range:95, slow:.5,slowT:1.5,         desc:'まわりを凍てつかせる'},
-  glass:   {g:'鏡',name:'硝子',    t:3,c:'#ff9ae0',kind:'beam', dmg:50,           range:140,beams:1,                   desc:'光を集めて焼き続ける'},
-  miasma:  {g:'瘴',name:'瘴気',    t:3,c:'#b06aff',kind:'pulse',dmg:6,  rate:1,   range:100,dot:16,dotT:4,             desc:'まわりを毒の霧で包む'},
-  storm:   {g:'嵐',name:'嵐',      t:3,c:'#ffd23c',kind:'chain',dmg:30, rate:1.1, range:135,chain:6,                   desc:'6体に跳ねる大稲妻'},
-  crystal: {g:'晶',name:'水晶',    t:3,c:'#9ad0ff',kind:'bolt', dmg:150,rate:.35, range:190,fast:1,                    desc:'遠くを撃ち抜く狙撃'},
-  curse:   {g:'呪',name:'呪い',    t:3,c:'#d05aff',kind:'bolt', dmg:14, rate:1.5, range:130,curse:1.5,                 desc:'呪った敵は傷が1.5倍'},
-  obsidian:{g:'曜',name:'黒曜石',  t:3,c:'#9a8cff',kind:'pierce',dmg:40,rate:.8,  range:150,                           desc:'一直線に貫く刃'},
-  cataclysm:{g:'災',name:'天災',   t:4,c:'#fff08a',kind:'chain',dmg:70, rate:1.3, range:150,chain:9,slow:.4,slowT:1.5, desc:'凍てつく稲妻が9体を撃つ'},
-  star:    {g:'星',name:'星',      t:4,c:'#ffc0f0',kind:'beam', dmg:85,           range:165,beams:3,                   desc:'3本の光で焼き払う'},
-  abyss:   {g:'冥',name:'冥府',    t:4,c:'#c070ff',kind:'pulse',dmg:25, rate:1,   range:120,dot:45,dotT:4,curse:1.4,   desc:'毒と呪いをまき散らす'},
-  titan:   {g:'砲',name:'巨砲',    t:4,c:'#ff8a4a',kind:'bolt', dmg:150,rate:1.1, range:160,splash:60,                 desc:'大爆発を撃ちこむ'},
-  stone:   {g:'賢',name:'賢者の石',t:5,c:'#ffe9a0',kind:'beam', dmg:220,          range:190,beams:4,curse:1.3,slow:.3,slowT:1,desc:'すべてを照らす究極の光'},
-  ragnarok:{g:'終',name:'終焉',    t:5,c:'#ff5a7a',kind:'bolt', dmg:420,rate:1.3, range:190,splash:80,dot:60,dotT:3,   desc:'夜ごと焼きつくす'},
+  // ★1
+  fire:    {name:'火',      t:1,c:'#ff6a3d',kind:'bolt', dmg:7,  rate:1,   range:105,dot:3,dotT:2,              desc:'当てた敵を燃やす'},
+  water:   {name:'水',      t:1,c:'#4aa8ff',kind:'bolt', dmg:4,  rate:1,   range:105,slow:.25,slowT:1.5,        desc:'当てた敵を遅くする'},
+  earth:   {name:'土',      t:1,c:'#c08a4a',kind:'bolt', dmg:13, rate:.5,  range:95, splash:34,                 desc:'重い一撃。まわりも巻きこむ'},
+  wind:    {name:'風',      t:1,c:'#7df0c0',kind:'bolt', dmg:2.2,rate:3.2, range:125,                           desc:'弱いが、とても速く撃つ'},
+  // ★2
+  flame:   {name:'炎',      t:2,c:'#ff8a3d',kind:'bolt', dmg:16, rate:1.1, range:110,dot:6,dotT:2,              desc:'強く燃やす'},
+  pond:    {name:'池',      t:2,c:'#5ab8ff',kind:'pulse',dmg:5,  rate:1,   range:85, slow:.35,slowT:1.2,        desc:'まわりの敵を遅くする'},
+  rock:    {name:'岩',      t:2,c:'#b89a78',kind:'bolt', dmg:34, rate:.5,  range:100,splash:40,                 desc:'大きな岩を投げつける'},
+  gust:    {name:'旋風',    t:2,c:'#9af0d0',kind:'bolt', dmg:4.2,rate:4.5, range:135,                           desc:'風の刃を連射する'},
+  steam:   {name:'蒸気',    t:2,c:'#cfd8e8',kind:'pulse',dmg:10, rate:1,   range:80,                            desc:'まわりの敵すべてを蒸す'},
+  lava:    {name:'溶岩',    t:2,c:'#ff4a1a',kind:'bolt', dmg:22, rate:.55, range:110,splash:42,dot:6,dotT:3,    desc:'爆ぜて、広く燃やす'},
+  bolt:    {name:'雷',      t:2,c:'#ffe45c',kind:'chain',dmg:13, rate:1,   range:120,chain:3,                   desc:'敵から敵へ跳ねる稲妻'},
+  ice:     {name:'氷',      t:2,c:'#8fe6ff',kind:'bolt', dmg:9,  rate:1.1, range:115,slow:.45,slowT:2,          desc:'敵を強く凍えさせる'},
+  sand:    {name:'砂',      t:2,c:'#e6c88a',kind:'bolt', dmg:3.6,rate:5,   range:125,                           desc:'砂つぶての連射'},
+  swamp:   {name:'沼',      t:2,c:'#9cbc4e',kind:'trap',                   range:34, slow:.35,slowT:.3,         desc:'罠：踏んだ敵が遅くなる'},
+  // ★3
+  inferno: {name:'業火',    t:3,c:'#ff5a2a',kind:'pulse',dmg:22, rate:1,   range:90, dot:14,dotT:3,             desc:'まわりを焼きつくす'},
+  sea:     {name:'海',      t:3,c:'#3a90ff',kind:'bolt', dmg:40, rate:.7,  range:120,splash:55,slow:.4,slowT:1.5,desc:'大波をぶつけて遅くする'},
+  mountain:{name:'山',      t:3,c:'#c8935a',kind:'bolt', dmg:110,rate:.45, range:110,splash:55,                 desc:'山のような一撃'},
+  tornado: {name:'竜巻',    t:3,c:'#7df0c0',kind:'pulse',dmg:20, rate:1.6, range:100,                           desc:'まわりを切り刻む'},
+  engine:  {name:'機関',    t:3,c:'#ffb070',kind:'bolt', dmg:6.5,rate:9,   range:135,                           desc:'止まらない機関砲'},
+  blizzard:{name:'吹雪',    t:3,c:'#bfeaff',kind:'pulse',dmg:16, rate:.9,  range:95, slow:.5,slowT:1.5,         desc:'まわりを凍てつかせる'},
+  glass:   {name:'硝子',    t:3,c:'#ff9ae0',kind:'beam', dmg:50,           range:140,beams:1,                   desc:'光を集めて焼き続ける'},
+  miasma:  {name:'瘴気',    t:3,c:'#b06aff',kind:'pulse',dmg:6,  rate:1,   range:100,dot:16,dotT:4,             desc:'まわりを毒の霧で包む'},
+  storm:   {name:'嵐',      t:3,c:'#ffd23c',kind:'chain',dmg:30, rate:1.1, range:135,chain:6,                   desc:'6体に跳ねる大稲妻'},
+  crystal: {name:'水晶',    t:3,c:'#9ad0ff',kind:'bolt', dmg:150,rate:.35, range:190,fast:1,                    desc:'遠くを撃ち抜く狙撃'},
+  curse:   {name:'呪い',    t:3,c:'#d05aff',kind:'bolt', dmg:14, rate:1.5, range:130,curse:1.5,                 desc:'呪った敵は傷が1.5倍'},
+  obsidian:{name:'黒曜石',  t:3,c:'#9a8cff',kind:'pierce',dmg:40,rate:.8,  range:150,                           desc:'一直線に貫く刃'},
+  bog:     {name:'毒沼',    t:3,c:'#8be04a',kind:'trap',                   range:34, slow:.35,slowT:.3,dot:16,dotT:2,desc:'罠：遅くして毒にする'},
+  quicksand:{name:'流砂',   t:3,c:'#e0b060',kind:'trap',                   range:36, slow:.6,slowT:.3,          desc:'罠：足をとられて大きく遅くなる'},
+  crater:  {name:'火口',    t:3,c:'#ff6a2a',kind:'trap',                   range:34, dot:32,dotT:2,             desc:'罠：踏んだ敵を焼く'},
+  // ★4
+  sun:     {name:'太陽',    t:4,c:'#ffc23c',kind:'pulse',dmg:60, rate:1,   range:130,dot:40,dotT:3,             desc:'広くまわりを灼く'},
+  tsunami: {name:'津波',    t:4,c:'#4a9cff',kind:'pierce',dmg:130,rate:.8, range:170,slow:.5,slowT:2,           desc:'一直線に押し流す'},
+  peak:    {name:'霊峰',    t:4,c:'#d8b890',kind:'bolt', dmg:340,rate:.45, range:130,splash:75,                 desc:'すべてを押しつぶす'},
+  typhoon: {name:'台風',    t:4,c:'#8af0d8',kind:'pulse',dmg:55, rate:2,   range:125,slow:.3,slowT:1,           desc:'まわりを吹き荒らす'},
+  cataclysm:{name:'天災',   t:4,c:'#fff08a',kind:'chain',dmg:70, rate:1.3, range:150,chain:9,slow:.4,slowT:1.5, desc:'凍てつく稲妻が9体を撃つ'},
+  star:    {name:'星',      t:4,c:'#ffc0f0',kind:'beam', dmg:85,           range:165,beams:3,                   desc:'3本の光で焼き払う'},
+  abyss:   {name:'冥府',    t:4,c:'#c070ff',kind:'pulse',dmg:25, rate:1,   range:120,dot:45,dotT:4,curse:1.4,   desc:'毒と呪いをまき散らす'},
+  titan:   {name:'巨砲',    t:4,c:'#ff8a4a',kind:'bolt', dmg:150,rate:1.1, range:160,splash:60,                 desc:'大爆発を撃ちこむ'},
+  // ★5
+  stone:   {name:'賢者の石',t:5,c:'#ffe9a0',kind:'beam', dmg:220,          range:190,beams:4,curse:1.3,slow:.3,slowT:1,desc:'すべてを照らす光'},
+  ragnarok:{name:'終焉',    t:5,c:'#ff5a7a',kind:'bolt', dmg:420,rate:1.3, range:190,splash:80,dot:60,dotT:3,   desc:'夜ごと焼きつくす'},
+  phoenix: {name:'不死鳥',  t:5,c:'#ff9a3c',kind:'bolt', dmg:260,rate:2,   range:180,splash:50,dot:80,dotT:3,   desc:'炎の羽を降らせる'},
+  dragon:  {name:'竜',      t:5,c:'#5ad0c0',kind:'pierce',dmg:520,rate:1,  range:200,slow:.4,slowT:2,           desc:'すべてを貫く息吹'},
+  // ★6
+  genesis: {name:'創世',    t:6,c:'#fff6d8',kind:'beam', dmg:700,          range:210,beams:6,curse:1.5,slow:.4,slowT:1,desc:'夜そのものを終わらせる'},
 };
 for(const k in ITEMS)ITEMS[k].id=k;
 const RECIPES=[
+  // おなじもの同士
+  ['fire','fire','flame'],['water','water','pond'],['earth','earth','rock'],['wind','wind','gust'],
+  ['flame','flame','inferno'],['pond','pond','sea'],['rock','rock','mountain'],['gust','gust','tornado'],
+  ['swamp','swamp','bog'],['sand','sand','quicksand'],['lava','lava','crater'],
+  ['inferno','inferno','sun'],['sea','sea','tsunami'],['mountain','mountain','peak'],['tornado','tornado','typhoon'],
+  // ちがうもの同士
   ['fire','water','steam'],['fire','earth','lava'],['fire','wind','bolt'],
-  ['water','earth','venom'],['water','wind','ice'],['earth','wind','sand'],
-  ['steam','bolt','engine'],['steam','ice','blizzard'],['lava','sand','glass'],['lava','venom','miasma'],
-  ['bolt','sand','storm'],['ice','sand','crystal'],['venom','bolt','curse'],['lava','ice','obsidian'],
+  ['water','earth','swamp'],['water','wind','ice'],['earth','wind','sand'],
+  ['steam','bolt','engine'],['steam','ice','blizzard'],['lava','sand','glass'],['lava','swamp','miasma'],
+  ['bolt','sand','storm'],['ice','sand','crystal'],['swamp','bolt','curse'],['lava','ice','obsidian'],
   ['storm','blizzard','cataclysm'],['glass','crystal','star'],['miasma','curse','abyss'],['engine','obsidian','titan'],
-  ['star','abyss','stone'],['cataclysm','titan','ragnarok'],
+  ['star','abyss','stone'],['cataclysm','titan','ragnarok'],['sun','typhoon','phoenix'],['tsunami','peak','dragon'],
+  ['stone','ragnarok','genesis'],
 ];
 const rkey=(a,b)=>a<b?a+'+'+b:b+'+'+a;
 const RECIPE={},MADE_BY={};
 for(const[a,b,r]of RECIPES){RECIPE[rkey(a,b)]=r;MADE_BY[r]=[a,b]}
 const BASES=['fire','water','earth','wind'];
-const BASE_COST=10,LV_MULT=[1,2.3,5.3],MAX_WAVE=20;
-const itemValue=it=>BASE_COST*2**(ITEMS[it.id].t-1)*2**(it.lv-1);
+const BASE_COST=10,MAX_WAVE=20;
+const itemValue=it=>BASE_COST*2**(ITEMS[it.id].t-1);
+const isTrap=id=>ITEMS[id].kind==='trap';
+// 置ける場所：魔法陣には塔、道の上には罠、作業台にはなんでも
+const fits=(id,sl)=>sl.bench||(sl.path?isTrap(id):!isTrap(id));
 
 /* ---------------- 盤面（道・魔法陣・作業台・ボタン） ---------------- */
 const PATH=[[-30,125],[375,125],[375,265],[75,265],[75,405],[425,405]];
@@ -189,7 +223,8 @@ const slots=[];
 for(const x of[75,150,225,300])slots.push({x,y:195,field:true,item:null});
 for(const x of[150,225,300,375])slots.push({x,y:335,field:true,item:null});
 for(const x of[115,190,265,340])slots.push({x,y:470,field:true,item:null});
-for(let r=0;r<2;r++)for(let i=0;i<6;i++)slots.push({x:45+i*72,y:558+r*66,field:false,item:null});
+for(const[x,y]of[[225,125],[375,195],[225,265],[75,335],[240,405]])slots.push({x,y,path:true,item:null});
+for(let r=0;r<2;r++)for(let i=0;i<6;i++)slots.push({x:45+i*72,y:558+r*66,bench:true,item:null});
 const buttons=[];
 BASES.forEach((id,i)=>buttons.push({id,x:12+i*74,y:668,w:68,h:54,p:0}));
 buttons.push({id:'trash',x:310,y:668,w:60,h:54,p:0},{id:'codex',x:378,y:668,w:60,h:54,p:0},
@@ -204,7 +239,7 @@ const ENEMY={
   mite: {hp:.28, spd:62,r:6, w:.35,life:1,rim:'#9a4ae0'},
   boss: {hp:18,  spd:24,r:24,w:12, life:8,rim:'#ff3b6b'},
 };
-let HP0=85,HP_GROW=1.25;
+let HP0=80,HP_GROW=1.27;
 const waveHp=w=>HP0*HP_GROW**(w-1);
 function buildWave(w){
   const q=[];let t=0;
@@ -214,24 +249,24 @@ function buildWave(w){
   add('shade',5+w,gap);
   if(w>=2)add('wisp',1+(w>>1),gap*.7);
   if(w>=4)add('golem',Math.floor(w/3),gap*1.6);
-  if(w%5===0){t+=1;add('boss',1,1,w>=20?2.2:1)}
+  if(w%5===0){t+=1;add('boss',1,1,w>=20?2.2:w===5?.75:1)}
   return q;
 }
 
 /* ---------------- 状態 ---------------- */
 let S,disc,best=0,muted=false,FX=true;
 const SAVE='yoiyami-alchemy-v1';
-try{const d=JSON.parse(localStorage.getItem(SAVE)||'{}');disc=new Set(d.disc||BASES);best=d.best||0;muted=!!d.muted}catch(e){disc=new Set(BASES)}
+try{const d=JSON.parse(localStorage.getItem(SAVE)||'{}');disc=new Set((d.disc||BASES).filter(i=>ITEMS[i]));best=d.best||0;muted=!!d.muted}catch(e){disc=new Set(BASES)}
 BASES.forEach(b=>disc.add(b));
 function save(){try{localStorage.setItem(SAVE,JSON.stringify({disc:[...disc],best,muted}))}catch(e){}}
-function mkItem(id,lv=1,x=W/2,y=H){return{id,lv,cd:rnd(.3),rx:x,ry:y,s:1,sv:0,kick:0,hide:0,ph:rnd(TAU),held:false,shake:0,beamT:[]}}
+function mkItem(id,x=W/2,y=H){return{id,cd:rnd(.3),rx:x,ry:y,s:1,sv:0,kick:0,hide:0,ph:rnd(TAU),held:false,shake:0,beamT:[]}}
 function reset(){
   S={mana:40,manaShow:40,manaBump:0,manaErr:0,lives:20,wave:0,active:false,queue:[],wt:0,budget:0,wsum:1,
      enemies:[],shots:[],time:0,speed:1,over:false,cleared:false,endless:false,dawn:0,cele:0,rocketT:0,
      shake:0,flash:0,flashC:'#fff',slowmo:0,banner:null,info:null,coreHit:0,benchShake:0,started:false,hintT:0};
   for(const s of slots)s.item=null;
-  const bench=slots.filter(s=>!s.field);
-  BASES.forEach((id,i)=>{const it=mkItem(id,1,bench[i].x,bench[i].y);it.s=.01;it.hide=.25+i*.12;bench[i].item=it});
+  const bench=slots.filter(s=>s.bench);
+  BASES.forEach((id,i)=>{const it=mkItem(id,bench[i].x,bench[i].y);it.s=.01;it.hide=.25+i*.12;bench[i].item=it});
   parts.length=0;fx.length=0;sel=null;drag=null;
 }
 
@@ -310,10 +345,45 @@ const flame=g=>{g.beginPath();g.moveTo(0,-14);g.bezierCurveTo(2,-7,10,-3,9,5);g.
 const cloud=(g,y)=>{g.beginPath();g.arc(-6,y+1,5.5,0,TAU);g.arc(0,y-3,7,0,TAU);g.arc(7,y+1,5.5,0,TAU);g.rect(-6,y+1,13,5.5);g.fill()};
 const DARK='#0a0814';
 const ICON={
+  earth(g,c){g.beginPath();g.ellipse(0,10,14,13,0,Math.PI,TAU);g.closePath();g.fill();g.fillStyle='#00000050';dot(g,-6,4,2);dot(g,3,6,1.6);dot(g,6,1,1.3);dot(g,-1,0,1.2);
+    g.strokeStyle='#8be04a';g.lineWidth=2;line(g,0,-3,0,-9);g.fillStyle='#8be04a';g.beginPath();g.ellipse(3.5,-10.5,4,2,-.5,0,TAU);g.fill();g.beginPath();g.ellipse(-3.5,-9,3.2,1.7,.5,0,TAU);g.fill()},
+  flame(g,c){g.strokeStyle='#a06a3a';g.lineWidth=3.4;line(g,-10,13,10,8);line(g,-10,8,10,13);g.translate(0,-4);g.scale(.86,.86);flame(g);g.fill();g.translate(0,5);g.scale(.52,.52);flame(g);g.fillStyle='#ffe9a0';g.fill()},
+  inferno(g,c){for(const[x,y,k,r]of[[-8,4,.62,-.25],[8,4,.62,.25],[0,-1,.98,0]]){g.save();g.translate(x,y);g.rotate(r);g.scale(k,k);flame(g);g.fill();g.restore()}
+    g.translate(0,5);g.scale(.5,.5);flame(g);g.fillStyle='#ffe9a0';g.fill()},
+  sun(g,c){dot(g,0,0,7.5);g.lineWidth=2.4;for(let i=0;i<8;i++){const a=i/8*TAU;line(g,Math.cos(a)*10.5,Math.sin(a)*10.5,Math.cos(a)*(i%2?13:15),Math.sin(a)*(i%2?13:15))}g.fillStyle='#fff6d8';dot(g,-2,-2,3)},
+  pond(g,c){g.fillStyle=rgba(c,.6);g.beginPath();g.ellipse(-1,5,13,7.5,0,0,TAU);g.fill();g.lineWidth=1.8;g.stroke();
+    g.strokeStyle='#ffffffb0';g.lineWidth=1.2;g.beginPath();g.ellipse(-4,5,5.5,2.6,0,0,TAU);g.stroke();
+    g.strokeStyle='#8be04a';g.lineWidth=1.8;line(g,8,5,9,-11);line(g,11,6,13,-5);g.lineWidth=4;g.strokeStyle='#a06a3a';line(g,9,-11,9.3,-6)},
+  sea(g,c){g.lineWidth=2.6;[-7,1,9].forEach((y,i)=>{g.globalAlpha=1-i*.22;g.beginPath();g.moveTo(-14,y);for(let x=-14;x<13;x+=9.33){g.quadraticCurveTo(x+2.3,y-6,x+4.67,y);g.quadraticCurveTo(x+7,y+6,x+9.33,y)}g.stroke()})},
+  tsunami(g,c){g.beginPath();g.moveTo(-14,13);g.lineTo(-14,3);g.bezierCurveTo(-11,-13,4,-17,11,-8);g.bezierCurveTo(5,-10,1,-6,3,0);g.bezierCurveTo(5,6,10,9,14,13);g.closePath();g.fill();
+    g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.moveTo(-9,-7);g.bezierCurveTo(-3,-14,6,-14,11,-8);g.stroke();g.fillStyle='#fff';dot(g,12,-3,1.4);dot(g,8,-1,1.1);dot(g,13,2,1)},
+  rock(g,c){poly(g,[-11,10,-13,0,-5,-10,6,-11,13,-2,10,10]);g.fill();g.fillStyle='#00000050';poly(g,[6,-11,13,-2,10,10,2,10,4,0]);g.fill();
+    g.strokeStyle='#ffffff90';g.lineWidth=1.3;line(g,-9,0,-4,-7,3,-8);g.strokeStyle='#00000070';line(g,-5,3,-1,6,-3,10)},
+  peak(g,c){g.lineWidth=1.5;g.globalAlpha=.6;g.beginPath();g.arc(0,-4,12.5,0,TAU);g.stroke();g.globalAlpha=1;poly(g,[-14,12,0,-14,14,12]);g.fill();
+    g.fillStyle='#00000055';poly(g,[0,-14,14,12,5,12,1.5,0]);g.fill();g.fillStyle='#fff';poly(g,[0,-14,4.8,-5,2,-7,0,-3.5,-2,-7,-4.8,-5]);g.fill()},
+  gust(g,c){g.lineWidth=2.6;g.beginPath();for(let i=0;i<=30;i++){const t=i/30,a=t*TAU*1.8+1,r=1.5+t*11.5;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.stroke();g.globalAlpha=.6;line(g,-14,12,-6,13)},
+  typhoon(g,c){g.lineWidth=3.2;for(let k=0;k<2;k++){g.beginPath();for(let i=0;i<=14;i++){const t=i/14,r=5.5+t*8.5,a=k*Math.PI+t*2.3;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.stroke()}
+    g.lineWidth=2.4;g.beginPath();g.arc(0,0,4.5,0,TAU);g.stroke()},
+  cataclysm(g,c){g.lineWidth=2.2;g.globalAlpha=.75;g.beginPath();g.arc(0,0,13.5,.5,2.3);g.stroke();g.beginPath();g.arc(0,0,13.5,3.6,5.5);g.stroke();g.globalAlpha=1;
+    poly(g,[4,-14,-8,2,-1,2,-5,14,9,-3,2,-3]);g.fill();g.fillStyle='#fff';dot(g,-10,-8,1.5);dot(g,11,7,1.5);dot(g,-11,9,1.1);dot(g,10,-9,1.1)},
+  swamp(g,c){g.fillStyle=rgba(c,.65);g.beginPath();g.ellipse(-1,7,14,7,0,0,TAU);g.fill();g.lineWidth=1.6;g.stroke();
+    g.strokeStyle=DARK;g.lineWidth=1.3;g.beginPath();g.arc(-6,6,2.6,0,TAU);g.stroke();g.beginPath();g.arc(2,9,1.8,0,TAU);g.stroke();
+    g.strokeStyle=c;g.lineWidth=1.8;line(g,7,5,8,-10);line(g,10,6,12,-4);line(g,-9,2,-10,-6);g.lineWidth=4;g.strokeStyle='#a06a3a';line(g,8,-11,8.3,-6)},
+  quicksand(g,c){g.lineWidth=2;for(const[y,w,h]of[[1,14,9.5],[2.5,9.5,6],[4,5,3]]){g.beginPath();g.ellipse(0,y,w,h,0,0,TAU);g.stroke()}g.fillStyle=DARK;g.beginPath();g.ellipse(0,5,2,1.2,0,0,TAU);g.fill();
+    g.fillStyle=c;dot(g,-8,-10,1.3);dot(g,6,-12,1.1);dot(g,11,-8,1.2)},
+  crater(g,c){g.fillStyle='#3a1812';g.beginPath();g.ellipse(0,8,15,6.5,0,0,TAU);g.fill();g.fillStyle='#ffb040';g.beginPath();g.ellipse(0,8,11.5,4.2,0,0,TAU);g.fill();g.lineWidth=1.5;g.stroke();
+    g.fillStyle=c;for(const[x,y,k]of[[-7,-1,.45],[7,-1,.45],[0,-5,.62]]){g.save();g.translate(x,y);g.scale(k,k);flame(g);g.fill();g.restore()}},
+  phoenix(g,c){for(const sx of[-1,1]){g.save();g.scale(sx,1);poly(g,[0,3,14,-12,10,-3,14,1,6,4]);g.fill();g.restore()}
+    g.beginPath();g.ellipse(0,3,3.2,6.5,0,0,TAU);g.fill();dot(g,0,-6,2.8);g.lineWidth=2;line(g,0,8,-6,15);line(g,0,8,0,16);line(g,0,8,6,15);
+    g.fillStyle='#ffe9a0';g.beginPath();g.ellipse(0,3,1.5,4,0,0,TAU);g.fill();poly(g,[0,-10,1.6,-8,-1.6,-8]);g.fill()},
+  dragon(g,c){g.lineWidth=4;g.beginPath();g.moveTo(10,13);g.bezierCurveTo(-16,12,14,0,-3,-5);g.stroke();poly(g,[-13,-7,-3,-12,0,-3,-6,-1]);g.fill();
+    g.lineWidth=1.8;line(g,-4,-11,2,-15);line(g,-1,-8,6,-11);g.fillStyle='#fff';dot(g,-6,-7,1.3);g.fillStyle=c;dot(g,2,3.5,1.6);dot(g,-3,8.5,1.6);dot(g,6,12,1.4)},
+  genesis(g,c){g.lineWidth=1.5;for(const r of[.6,-.6]){g.beginPath();g.ellipse(0,0,14.5,5.5,r,0,TAU);g.stroke()}g.beginPath();g.ellipse(0,0,14.5,5.5,Math.PI/2,0,TAU);g.stroke();
+    g.fillStyle='#fff';dot(g,0,0,5);g.fillStyle='#ffe9a0';dot(g,12,8,1.6);dot(g,-12,-8,1.6);dot(g,0,-14.5,1.6)},
   fire(g,c){flame(g);g.fill();g.translate(0,5);g.scale(.52,.52);flame(g);g.fillStyle='#ffe9a0';g.fill()},
   water(g,c){g.beginPath();g.moveTo(0,-14);g.bezierCurveTo(3,-7,9.5,-1,9.5,4.5);g.arc(0,4.5,9.5,0,Math.PI);g.bezierCurveTo(-9.5,-1,-3,-7,0,-14);g.fill();
     g.strokeStyle='#ffffffcc';g.lineWidth=2;g.beginPath();g.arc(0,4.5,5.5,Math.PI*.55,Math.PI*1.05);g.stroke()},
-  earth(g,c){poly(g,[-14,11,-6,-6,-1,1,5,-11,14,11]);g.fill();g.fillStyle='#00000055';poly(g,[5,-11,14,11,7,11,2,-3]);g.fill();poly(g,[-6,-6,-1,1,-3,11,-6,11]);g.fill();
+  mountain(g,c){poly(g,[-14,11,-6,-6,-1,1,5,-11,14,11]);g.fill();g.fillStyle='#00000055';poly(g,[5,-11,14,11,7,11,2,-3]);g.fill();poly(g,[-6,-6,-1,1,-3,11,-6,11]);g.fill();
     g.fillStyle='#fff';poly(g,[5,-11,8,-4,5,-6,3,-4,2.2,-6.5]);g.fill()},
   wind(g,c){g.lineWidth=2.6;g.beginPath();g.moveTo(-13,-4);g.lineTo(4,-4);g.arc(4,-8.5,4.5,Math.PI/2,-Math.PI*.85,true);g.stroke();
     g.beginPath();g.moveTo(-13,2);g.lineTo(8,2);g.arc(8,6.5,4.5,-Math.PI/2,Math.PI*.85);g.stroke();line(g,-9,8,-1,8)},
@@ -322,7 +392,7 @@ const ICON={
   lava(g,c){g.fillStyle='#3a1812';poly(g,[-14,12,-5,-3,5,-3,14,12]);g.fill();g.stroke();
     g.fillStyle='#ffb040';poly(g,[-5,-3,5,-3,3.5,3,1.5,0,0,8,-2,1,-3.5,3]);g.fill();g.fillStyle=c;dot(g,-5,-9,1.8);dot(g,2,-12,1.6);dot(g,7,-8,1.4)},
   bolt(g,c){poly(g,[4,-14,-8,2,-1,2,-5,14,9,-3,2,-3]);g.fill();g.strokeStyle='#ffffffaa';g.lineWidth=1;g.stroke()},
-  venom(g,c){g.beginPath();g.arc(0,-3,10.5,0,TAU);g.fill();g.beginPath();g.rect(-5.5,5,11,7.5);g.fill();
+  bog(g,c){g.fillStyle=rgba(c,.5);g.beginPath();g.ellipse(0,11,14,4.5,0,0,TAU);g.fill();g.fillStyle=c;g.translate(0,-3);g.scale(.78,.78);g.beginPath();g.arc(0,-3,10.5,0,TAU);g.fill();g.beginPath();g.rect(-5.5,5,11,7.5);g.fill();
     g.fillStyle=DARK;dot(g,-4.2,-3,3);dot(g,4.2,-3,3);poly(g,[0,1,1.8,4.5,-1.8,4.5]);g.fill();g.strokeStyle=DARK;g.lineWidth=1.3;line(g,-2,8,-2,12.5);line(g,2,8,2,12.5)},
   ice(g,c){g.fillStyle=rgba(c,.75);poly(g,[0,-13,11,-6.5,0,0,-11,-6.5]);g.fill();g.fillStyle=rgba(c,.4);poly(g,[-11,-6.5,0,0,0,13,-11,6.5]);g.fill();
     g.fillStyle=rgba(c,.2);poly(g,[11,-6.5,0,0,0,13,11,6.5]);g.fill();g.lineWidth=1.6;poly(g,[0,-13,11,-6.5,11,6.5,0,13,-11,6.5,-11,-6.5]);g.stroke();line(g,-11,-6.5,0,0,11,-6.5);line(g,0,0,0,13);
@@ -343,7 +413,7 @@ const ICON={
     g.fillStyle=c;dot(g,0,1,6);g.fillStyle=DARK;g.beginPath();g.ellipse(0,1,1.9,5.6,0,0,TAU);g.fill();g.lineWidth=1.8;line(g,0,-14,0,-10);line(g,-8,-12,-6,-8.5);line(g,8,-12,6,-8.5)},
   obsidian(g,c){g.fillStyle='#17112e';poly(g,[2,-15,8,1,3,14,-7,7,-5,-5]);g.fill();g.lineWidth=1.8;g.stroke();
     g.lineWidth=1;g.strokeStyle=rgba(c,.75);line(g,2,-15,0,3,8,1);line(g,-7,7,0,3,3,14);g.fillStyle=rgba(c,.45);poly(g,[2,-15,0,3,-5,-5]);g.fill()},
-  cataclysm(g,c){g.lineWidth=2.2;[[0,13.5],[2,10.5],[-1.5,7.5],[1.5,4.8],[0,2.4]].forEach(([x,w],i)=>{g.beginPath();g.ellipse(x,-11+i*5.6,w,2.5,0,0,TAU);g.stroke()});dot(g,-12,5,1.4);dot(g,11,9,1.4)},
+  tornado(g,c){g.lineWidth=2.2;[[0,13.5],[2,10.5],[-1.5,7.5],[1.5,4.8],[0,2.4]].forEach(([x,w],i)=>{g.beginPath();g.ellipse(x,-11+i*5.6,w,2.5,0,0,TAU);g.stroke()});dot(g,-12,5,1.4);dot(g,11,9,1.4)},
   star(g,c){g.beginPath();for(let i=0;i<10;i++){const a=i/10*TAU-TAU/4,r=i%2?5.8:14;g.lineTo(Math.cos(a)*r,Math.sin(a)*r+1)}g.closePath();g.fill();
     g.fillStyle='#ffffffcc';g.beginPath();for(let i=0;i<10;i++){const a=i/10*TAU-TAU/4,r=i%2?2.6:6.5;g.lineTo(Math.cos(a)*r,Math.sin(a)*r+1)}g.fill()},
   abyss(g,c){g.lineWidth=2.2;for(let k=0;k<3;k++){g.beginPath();for(let i=0;i<=14;i++){const t=i/14,r=5+t*9.5,a=k*TAU/3+t*2.7;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.stroke()}
@@ -392,31 +462,27 @@ function drawItem(it,x,y,sc=1,alpha=1){
   ctx.save();ctx.globalAlpha=alpha;ctx.translate(x+(it.shake>0?Math.sin(it.shake*60)*it.shake*14:0),y);
   ctx.scale(s*(1+it.kick*.05),s*(1-it.kick*.05));
   ctx.drawImage(orb(it.id,true),-40,-40,80,80);
-  for(let i=0;i<it.lv;i++){ // ★ のかわりの小さな菱形
-    const px=(i-(it.lv-1)/2)*10,py=14.5;
+  for(let i=0;i<d.t;i++){ // ランク（★の数）を小さな菱形で
+    const px=(i-(d.t-1)/2)*(d.t>4?7.6:9.5),py=14.5;
     ctx.fillStyle='#07060d';ctx.beginPath();ctx.moveTo(px,py-5.5);ctx.lineTo(px+5,py);ctx.lineTo(px,py+5.5);ctx.lineTo(px-5,py);ctx.fill();
-    ctx.fillStyle=it.lv===3?'#fff1b8':'#e8c36a';ctx.beginPath();ctx.moveTo(px,py-3.6);ctx.lineTo(px+3.2,py);ctx.lineTo(px,py+3.6);ctx.lineTo(px-3.2,py);ctx.fill();
+    ctx.fillStyle=d.t>=5?'#fff1b8':'#e8c36a';ctx.beginPath();ctx.moveTo(px,py-3.6);ctx.lineTo(px+3.2,py);ctx.lineTo(px,py+3.6);ctx.lineTo(px-3.2,py);ctx.fill();
   }
   ctx.restore();
 }
 
 /* ---------------- 錬成 ---------------- */
 function tryCombine(a,b){
-  if(a.id===b.id){
-    if(a.lv!==b.lv)return{fail:'おなじ★どうしで重ねる'};
-    if(a.lv>=3)return{fail:'これ以上は育たない'};
-    return{id:a.id,lv:a.lv+1,up:true};
-  }
   const r=RECIPE[rkey(a.id,b.id)];
-  return r?{id:r,lv:Math.min(a.lv,b.lv)}:{fail:'反応なし…'};
+  return r?{id:r}:{fail:'反応なし…'};
 }
 function dropOn(from,to){
   const it=from.item;if(!it)return;
   if(!to||to===from){sfx.drop();return}
   if(!to.item){
+    if(!fits(it.id,to)){it.shake=.35;sfx.fail();floatText(to.x,to.y-30,to.path?'道に置けるのは罠だけ':'罠は道の上に置く','#b9b1d0',13);return}
     to.item=it;from.item=null;it.s=1.3;it.sv=-2;it.cd=Math.max(it.cd,.15);
     sfx.drop();ring(to.x,to.y,ITEMS[it.id].c,38,.3,2);buzz(8);
-    if(to.field&&!S.started){S.started=true}
+    if(!to.bench)S.started=true;
     return;
   }
   const res=tryCombine(it,to.item);
@@ -424,12 +490,15 @@ function dropOn(from,to){
     it.shake=.35;to.item.shake=.35;sfx.fail();buzz([10,40,10]);
     floatText(to.x,to.y-34,res.fail,'#b9b1d0',13);return;
   }
-  const n=mkItem(res.id,res.lv,to.x,to.y);n.hide=.3;n.s=.01;
+  // できたものが置けない場所なら、運んできた側のマスに残す
+  const dst=fits(res.id,to)?to:fits(res.id,from)?from:null;
+  if(!dst){it.shake=.35;sfx.fail();floatText(to.x,to.y-34,'作業台で錬成しよう','#b9b1d0',13);return}
+  const n=mkItem(res.id,dst.x,dst.y);n.hide=.3;n.s=.01;
   const isNew=!disc.has(res.id);
   if(isNew){disc.add(res.id);save()}
-  if(FX)fx.push({ty:'merge',x:to.x,y:to.y,a:{id:it.id,x:it.rx,y:it.ry},b:{id:to.item.id,x:to.item.rx,y:to.item.ry},t:0,dur:.3,res:n,isNew,up:res.up});
+  if(FX)fx.push({ty:'merge',x:dst.x,y:dst.y,a:{id:it.id,x:it.rx,y:it.ry},b:{id:to.item.id,x:to.item.rx,y:to.item.ry},t:0,dur:.3,res:n,isNew});
   else n.hide=0,n.s=1;
-  from.item=null;to.item=n;
+  from.item=null;to.item=null;dst.item=n;
 }
 function mergeDone(f){
   const n=f.res,d=ITEMS[n.id];
@@ -437,16 +506,16 @@ function mergeDone(f){
   burst(f.x,f.y,d.c,18+d.t*6,130+d.t*30);sparks(f.x,f.y,'#ffffff',8+d.t*3,220+d.t*30);
   burst(f.x,f.y,ITEMS[f.a.id].c,8,90);burst(f.x,f.y,ITEMS[f.b.id].c,8,90);
   ring(f.x,f.y,d.c,46+d.t*14,.45,3);ring(f.x,f.y,'#ffffff',30+d.t*8,.28,1.5);
-  shake(2+d.t*1.2);buzz(15+d.t*6);sfx.merge(f.up?n.lv:d.t-1);
-  if(f.up)floatText(f.x,f.y-36,'★'.repeat(n.lv),'#ffe9a0',17);
+  shake(2+d.t*1.2);buzz(15+d.t*6);sfx.merge(d.t-1);
+  floatText(f.x,f.y-36,'★'.repeat(d.t),'#ffe9a0',13);
   if(f.isNew){S.banner={id:n.id,t:0,dur:2.1};S.slowmo=1.1;sfx.disc();S.flash=.35;S.flashC=d.c}
 }
 function spawnBase(id,b){
-  const free=slots.find(s=>!s.field&&!s.item);
+  const free=slots.find(s=>s.bench&&!s.item);
   if(!free){S.benchShake=.4;sfx.fail();floatText(W/2,530,'作業台がいっぱい','#ff8a9a',14);return false}
   if(S.mana<BASE_COST){S.manaErr=.5;sfx.fail();return false}
   S.mana-=BASE_COST;
-  const it=mkItem(id,1,b?b.x+b.w/2:free.x,b?b.y+b.h/2:free.y);it.s=.4;it.sv=6;free.item=it;
+  const it=mkItem(id,b?b.x+b.w/2:free.x,b?b.y+b.h/2:free.y);it.s=.4;it.sv=6;free.item=it;
   sfx.spawn(BASES.indexOf(id));buzz(6);
   if(FX)sparks(it.rx,it.ry,ITEMS[id].c,6,140);
   return true;
@@ -504,7 +573,7 @@ function inRange(x,y,R,max){ // 射程内の敵を、ゴールに近い順に
   a.sort((p,q)=>q.d-p.d);return max?a.slice(0,max):a;
 }
 function towerFire(sl,it,dt){
-  const d=ITEMS[it.id],m=LV_MULT[it.lv-1],R=d.range*(1+(it.lv-1)*.06),x=sl.x,y=sl.y;
+  const d=ITEMS[it.id],m=1,R=d.range,x=sl.x,y=sl.y;
   if(d.kind==='beam'){
     const ts=inRange(x,y,R,d.beams);it.beamT=ts;
     for(const e of ts){applyHit(e,d,m,d.c);hurt(e,d.dmg*m*dt);if(FX&&Math.random()<dt*14)sparks(e.x,e.y,d.c,1,90)}
@@ -538,7 +607,7 @@ function towerFire(sl,it,dt){
     const a=Math.atan2(tg.y-y,tg.x-x),L=R*1.25,ex=x+Math.cos(a)*L,ey=y+Math.sin(a)*L;
     for(const e of S.enemies){if(e.dead)continue;
       const k=clamp(((e.x-x)*(ex-x)+(e.y-y)*(ey-y))/(L*L),0,1),px=x+(ex-x)*k,py=y+(ey-y)*k;
-      if((e.x-px)**2+(e.y-py)**2<(e.r+9)**2){hurt(e,d.dmg*m);if(FX)sparks(e.x,e.y,d.c,3,140)}}
+      if((e.x-px)**2+(e.y-py)**2<(e.r+9)**2){applyHit(e,d,m,d.c);hurt(e,d.dmg*m);if(FX)sparks(e.x,e.y,d.c,3,140)}}
     if(FX)fx.push({ty:'line',x,y,ex,ey,color:d.c,t:0,dur:.25});sfx.shot(500);return;
   }
   S.shots.push({x,y,tx:tg.x,ty:tg.y,tg,d,m,spd:d.fast?900:d.splash?330:480});
@@ -571,7 +640,12 @@ function update(dt){
   }
   for(const sl of slots){
     const it=sl.item;if(!it)continue;
-    if(it.hide>0||it.held||!sl.field){it.beamT.length=0;continue}
+    if(it.hide>0||it.held||sl.bench){it.beamT.length=0;continue}
+    if(sl.path){ // 罠：上を通る敵にかかり続ける
+      const d=ITEMS[it.id];
+      for(const e of S.enemies){if(!e.dead&&(e.x-sl.x)**2+(e.y-sl.y)**2<(d.range+e.r*.5)**2)applyHit(e,d,1,d.c)}
+      continue;
+    }
     towerFire(sl,it,dt);
   }
   for(const s of S.shots){
@@ -697,15 +771,15 @@ function show(id){document.querySelectorAll('.ov').forEach(o=>o.classList.toggle
 function openCodex(){
   const all=Object.values(ITEMS);$('#cnt').textContent=`発見 ${disc.size} / ${all.length}`;
   let h='';
-  for(let t=1;t<=5;t++){
-    h+=`<div class="tier">${['','始原','第二','第三','第四','究極'][t]}の元素</div>`;
+  for(let t=1;t<=6;t++){
+    h+=`<div class="tier">${'★'.repeat(t)}</div>`;
     for(const d of all.filter(d=>d.t===t)){
       const mk=MADE_BY[d.id];
       if(disc.has(d.id)){
         h+=`<div class="card" style="--c:${d.c}"><img class="o" alt="" src="${orb(d.id).toDataURL()}"><b>${d.name}</b>${mk?`<em>${ITEMS[mk[0]].name} ＋ ${ITEMS[mk[1]].name}</em>`:''}${d.desc}</div>`;
       }else{ // 材料が両方見つかっていれば、片方だけ教える
         const hint=mk&&disc.has(mk[0])&&disc.has(mk[1])?`${ITEMS[mk[0]].name} ＋ ？`:'？ ＋ ？';
-        h+=`<div class="card q"><div class="o">？</div><b>？？？</b><em>${hint}</em>まだ見つけていない</div>`;
+        h+=`<div class="card q"><div class="o">？</div><b>？？？</b><em>${hint}</em>${t<6?'まだ見つけていない':'すべての果て'}</div>`;
       }
     }
   }
@@ -743,6 +817,10 @@ function makeBg(){
       g.strokeStyle=rgba('#8b5cf6',.4);g.lineWidth=1.2;g.beginPath();g.arc(s.x,s.y,28,0,TAU);g.stroke();
       g.strokeStyle=rgba('#8b5cf6',.2);g.beginPath();g.arc(s.x,s.y,22,0,TAU);g.stroke();
       g.beginPath();for(let i=0;i<3;i++){const a=i/3*TAU-TAU/4;g[i?'lineTo':'moveTo'](s.x+Math.cos(a)*22,s.y+Math.sin(a)*22)}g.closePath();g.stroke();
+    }else if(s.path){
+      g.strokeStyle=rgba('#e8c36a',.4);g.lineWidth=1.2;g.setLineDash([4,4]);
+      g.beginPath();g.moveTo(s.x,s.y-15);g.lineTo(s.x+15,s.y);g.lineTo(s.x,s.y+15);g.lineTo(s.x-15,s.y);g.closePath();g.stroke();g.setLineDash([]);
+      g.fillStyle=rgba('#e8c36a',.3);g.beginPath();g.arc(s.x,s.y,2,0,TAU);g.fill();
     }else{g.fillStyle='#07060d';rr(g,s.x-31,s.y-30,62,60,12);g.fill();g.strokeStyle='#231e38';g.stroke()}
   }
   // 周辺を暗く
@@ -841,7 +919,7 @@ function render(dt){
   for(const s of slots){
     if(src&&s!==src){
       let ok=false;
-      if(!s.item)ok=true;else{const r=tryCombine(src.item,s.item);ok=!r.fail}
+      if(!s.item)ok=fits(src.item.id,s);else{const r=tryCombine(src.item,s.item);ok=!r.fail&&disc.has(r.id)}
       if(ok){const pu=.5+.5*Math.sin(T*7);ctx.strokeStyle=rgba(s.item?'#ffe9a0':'#8b5cf6',s.item?.5+pu*.5:.25+pu*.3);ctx.lineWidth=s.item?2.5:1.5;
         ctx.beginPath();ctx.arc(s.x,s.y,31+pu*2,0,TAU);ctx.stroke()}
     }
@@ -856,7 +934,7 @@ function render(dt){
     const d=ITEMS[it.id];ctx.save();ctx.translate(s.x,s.y);ctx.rotate(T*(.4+d.t*.15)+it.ph);ctx.strokeStyle=rgba(d.c,.5);ctx.lineWidth=1.5;ctx.setLineDash([5,7]);
     ctx.beginPath();ctx.arc(0,0,31,0,TAU);ctx.stroke();ctx.restore()}
   const rs=held?(slotAt(ptr.x,ptr.y-(held.touch?26:0))||null):sel;
-  if(rs&&rs.field&&(held||rs.item)){const it=held?held.item:rs.item,d=ITEMS[it.id],R=d.range*(1+(it.lv-1)*.06);
+  if(rs&&!rs.bench&&(held||rs.item)&&fits((held?held.item:rs.item).id,rs)){const it=held?held.item:rs.item,d=ITEMS[it.id],R=d.range;
     ctx.fillStyle=rgba(d.c,.07);ctx.strokeStyle=rgba(d.c,.5);ctx.lineWidth=1;ctx.beginPath();ctx.arc(rs.x,rs.y,R,0,TAU);ctx.fill();ctx.stroke()}
   if(sel&&sel.item){ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([4,5]);ctx.lineDashOffset=-T*30;ctx.beginPath();ctx.arc(sel.x,sel.y,33,0,TAU);ctx.stroke();ctx.setLineDash([])}
   else if(sel)sel=null;
@@ -866,17 +944,23 @@ function render(dt){
    ctx.save();ctx.translate(CORE.x,CORE.y+Math.sin(T*2)*2);ctx.fillStyle='#120e22';ctx.strokeStyle=c;ctx.lineWidth=2;
    ctx.beginPath();ctx.moveTo(0,-17);ctx.lineTo(11,0);ctx.lineTo(0,17);ctx.lineTo(-11,0);ctx.closePath();ctx.fill();ctx.stroke();
    ctx.fillStyle=c;ctx.globalAlpha=.8;ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(5,0);ctx.lineTo(0,8);ctx.lineTo(-5,0);ctx.fill();ctx.restore();ctx.globalAlpha=1}
+  for(const s of slots){const it=s.item;if(!s.path||!it||it.hide>0||it===held?.item)continue;
+    const d=ITEMS[it.id],pu=.5+.5*Math.sin(T*2.5+it.ph);
+    ctx.fillStyle=rgba(d.c,.2+pu*.08);ctx.strokeStyle=rgba(d.c,.55);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.ellipse(s.x,s.y,d.range+pu*1.5,d.range*.62+pu,0,0,TAU);ctx.fill();ctx.stroke();
+    if(Math.random()<dt*3)P(s.x+rnd(-d.range,d.range)*.7,s.y+rnd(-10,10),0,rnd(-25,-10),.7,3,d.c);
+    drawItem(it,it.rx,it.ry,.8,.9)}
   for(const e of S.enemies)drawEnemy(e);
   // 置いてある元素
   ctx.save();if(S.benchShake>0){S.benchShake-=dt}
-  for(const s of slots){const it=s.item;if(!it||it.hide>0||it===held?.item)continue;
-    const bx=!s.field&&S.benchShake>0?Math.sin(S.benchShake*60)*S.benchShake*10:0;
+  for(const s of slots){const it=s.item;if(!it||s.path||it.hide>0||it===held?.item)continue;
+    const bx=s.bench&&S.benchShake>0?Math.sin(S.benchShake*60)*S.benchShake*10:0;
     drawItem(it,it.rx+bx,it.ry+Math.sin(T*2+it.ph)*1.5)}
   ctx.restore();
   // 光線・弾・演出（加算合成）
   ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const s of slots){const it=s.item;if(!it||!it.beamT.length)continue;const d=ITEMS[it.id];
-    for(const e of it.beamT){for(const[w,a,c]of[[7+it.lv*2,.25,d.c],[2.5+it.lv,.95,'#ffffff']]){ctx.strokeStyle=rgba(c,a*(.8+.2*Math.sin(T*40)));ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(e.x,e.y);ctx.stroke()}
+    for(const e of it.beamT){for(const[w,a,c]of[[5+d.t*1.5,.25,d.c],[2+d.t*.6,.95,'#ffffff']]){ctx.strokeStyle=rgba(c,a*(.8+.2*Math.sin(T*40)));ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(e.x,e.y);ctx.stroke()}
       ctx.drawImage(glow(d.c),e.x-16,e.y-16,32,32)}}
   for(const s of S.shots){const z=s.d.splash?26:s.d.fast?30:16;ctx.drawImage(glow(s.d.c),s.x-z/2,s.y-z/2,z,z);ctx.drawImage(glow('#ffffff'),s.x-z/5,s.y-z/5,z/2.5,z/2.5)}
   for(const f of fx){
@@ -916,7 +1000,7 @@ function render(dt){
   // 説明の帯（選んでいる・運んでいる元素）
   const inf=held?held.item:sel&&sel.item;
   if(inf){const d=ITEMS[inf.id];ctx.fillStyle='#07060dd0';rr(ctx,40,50,W-80,26,13);ctx.fill();ctx.strokeStyle=rgba(d.c,.5);ctx.lineWidth=1;ctx.stroke();
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=FONT(13);ctx.fillStyle=d.c;ctx.fillText(`${d.name}${inf.lv>1?' '+'★'.repeat(inf.lv):''} ― ${d.desc}`,W/2,63.5)}
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=FONT(13);ctx.fillStyle=d.c;ctx.fillText(`${d.name} ${'★'.repeat(d.t)} ― ${d.desc}`,W/2,63.5)}
   // 最初の手引き
   if(!S.started&&!held&&S.wave===0){const a=.55+.35*Math.sin(T*3);ctx.textAlign='center';ctx.font=FONT(13.5);ctx.fillStyle=rgba('#e9e4f5',a);
     ctx.fillText('元素を重ねて錬成し、魔法陣へ運ぼう',W/2,508)}
