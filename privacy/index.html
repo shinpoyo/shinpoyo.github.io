@@ -40,7 +40,7 @@
 <main class="narrow">
   <p class="breadcrumb"><a href="/">トップ</a> › プライバシーポリシー</p>
   <h1>プライバシーポリシー</h1>
-  <p class="muted small">制定日：2026年10月11日　／　改定日：2026年10月26日（はるしねーちゃんの機能変更に合わせて、Gemini API の記載を削除）</p>
+  <p class="muted small">制定日：2026年10月11日　／　改定日：2026年11月22日（作品の遊ばれた回数を数える仕組みの記載を追加）</p>
 
   <p>shinpoyo（以下「運営者」）は、shinpoyo.com およびその配下で公開するゲーム・アプリ（以下「本サイト」）における利用者の情報の取り扱いを、次のとおり定めます。</p>
 
@@ -50,6 +50,9 @@
     <li>ゲームの記録・設定（スコア、称号、プレイヤー名、アイコン画像など）は、利用者のブラウザ内（localStorage）に保存されます。ブラウザのサイトデータを削除すると消えます。下の「全国完飲番付」に参加した場合を除き、運営者には送信されません。</li>
     <li>アクセス解析ツールは使用していません。</li>
   </ul>
+
+  <h3>作品の遊ばれた回数</h3>
+  <p>作品一覧を遊ばれた回数の多い順に並べるため、「遊ぶ」のリンクを押したときや、作品ページに埋め込んだゲームを触ったときに、その作品の名前（ID）を運営者のサーバー（Cloudflare）に送信します。同じ日に同じ人を2回数えないよう、IP アドレスを元に戻せない形に変換して90日間保存します。Cookie は使いません。公開するのは作品ごとの回数（人数）だけです。</p>
 
   <h3>マシマシ打の全国完飲番付（オンラインランキング）</h3>
   <p>マシマシ打では、遊び終わると成績が全国完飲番付に登録されます（常連カードの「全国完飲番付に参加する」でオフにできます）。参加している場合、次の情報を運営者のサーバー（Cloudflare）に送信します。</p>
@@ -81,9 +84,9 @@
           <td><a href="https://policies.google.com/privacy?hl=ja" rel="noopener">プライバシーポリシー</a></td>
         </tr>
         <tr>
-          <td>Cloudflare, Inc.（マシマシ打の全国完飲番付）</td>
-          <td>上記「全国完飲番付」に記載の情報、IP アドレス、ブラウザの情報</td>
-          <td>番付の登録・表示、不正な記録の検出、連続送信の制限</td>
+          <td>Cloudflare, Inc.（マシマシ打の全国完飲番付・作品の遊ばれた回数）</td>
+          <td>上記「全国完飲番付」「作品の遊ばれた回数」に記載の情報、IP アドレス、ブラウザの情報</td>
+          <td>番付の登録・表示、作品の並び順の決定、不正な記録の検出、連続送信の制限</td>
           <td><a href="https://www.cloudflare.com/ja-jp/privacypolicy/" rel="noopener">Cloudflare のプライバシーポリシー</a></td>
         </tr>
         <tr>
@@ -137,5 +140,6 @@
   </nav>
 </div></footer>
 <script src="/ads.js"></script>
+<script src="/assets/plays.js" data-games="{&quot;/mashimashida/&quot;:&quot;mashimashida&quot;,&quot;/Reversi-with-Sis/&quot;:&quot;reversi-with-sis&quot;,&quot;/keshikasu/&quot;:&quot;keshikasu&quot;,&quot;/haru_nechan_quiz_app/&quot;:&quot;haru-nechan-quiz&quot;,&quot;/Bullet-Reflector/&quot;:&quot;bullet-reflector&quot;,&quot;/alchemerge_defense/&quot;:&quot;alchemerge-defense&quot;,&quot;/smudge/&quot;:&quot;smudge&quot;}" defer></script>
 </body>
 </html>

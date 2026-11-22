@@ -1,0 +1,49 @@
+# 作品一覧を「遊ばれた回数」の多い順に並べ直す（毎日）
+# 回数は api.shinpoyo.com（shinpoyo/mashimashida の worker/）が数えている。
+# 並びが変わったときだけ、_data/plays.json と書き出し直した HTML を main にコミットする。
+name: Sort works by plays
+
+on:
+  schedule:
+    - cron: '40 18 * * *' # 毎日 日本時間 3:40
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sort-works-by-plays
+  cancel-in-progress: false
+
+jobs:
+  sort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0 # build.py が sitemap の更新日を git の履歴から取るため
+      - name: 回数を取ってくる
+        id: fetch
+        run: |
+          mkdir -p _data
+          if curl -fsS --retry 3 'https://api.shinpoyo.com/v1/plays?days=30' -o /tmp/plays.json && jq -e '.games | type == "array"' /tmp/plays.json > /dev/null; then
+            jq '{days, from, to, games}' /tmp/plays.json > _data/plays.json
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::api.shinpoyo.com から回数を取れなかったので、並びは変えません"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: 書き出し直して、並びが変わったらコミット
+        if: steps.fetch.outputs.ok == 'true'
+        run: |
+          python3 _tools/build.py > /dev/null
+          if git diff --quiet -- '*.html'; then
+            echo "並びは変わっていません"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add _data/plays.json -- '*.html'
+          git commit -m '作品一覧を遊ばれた回数の順に並べ直す（自動）'
+          git push origin HEAD:main
