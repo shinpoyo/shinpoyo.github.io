@@ -20,6 +20,10 @@
 - 作品ページ（game_url があるページ）は、見出しの下に作った人と最終更新日、本文の途中と末尾に広告枠、末尾にシェアのリンクと「ほかの作品」を自動で付ける
 - 記事は feed.xml（Atom）にも書き出す
 - 各ページに構造化データ（JSON-LD）を付け、sitemap.xml には git の最終コミット日を lastmod として入れる
+- `data-sort="plays"` を付けた `<ul>`・`<tbody>` は、中の `<li>`・`<tr>` を遊ばれた回数の多い順に並べ替える
+  （回数は `_data/plays.json`。GitHub Actions が毎日 api.shinpoyo.com から取ってくる。同じ回数・データなしは書いた順のまま）。
+  `<!-- PLAYS_NOTE -->` は「直近30日に遊ばれた回数の多い順」という注記に置き換わる（データがなければ消える）
+- 「遊ぶ」のリンクや作品ページに埋め込んだゲームが使われると、`/assets/plays.js` が api.shinpoyo.com に1回数えて送る
 - `_` で始まるフォルダは GitHub Pages（Jekyll）で公開されない
 """
 from pathlib import Path
@@ -88,7 +92,7 @@ FOOT = """<footer class="site-footer"><div class="inner">
   </nav>
 </div></footer>
 <script src="/ads.js"></script>
-</body>
+{plays_script}</body>
 </html>
 """
 
@@ -190,7 +194,8 @@ def insert_before_nth_h2(body, n, html_block):
 
 def other_works(meta, works):
     items = []
-    for w in works:
+    plays, _ = load_plays()
+    for w in sorted(works, key=lambda w: -plays.get(work_id(w), 0)):
         if w["path"] == meta["path"]:
             continue
         items.append(
@@ -201,7 +206,67 @@ def other_works(meta, works):
     return '<h2>ほかの作品</h2>\n<ul class="works works-mini">\n' + "\n".join(items) + "\n</ul>"
 
 
+PLAYS_FILE = ROOT / "_data" / "plays.json"
+
+
+def load_plays():
+    """作品 ID → 直近の遊ばれた回数。ファイルがなければ空（並びは書いた順のまま）"""
+    try:
+        data = json.loads(PLAYS_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}, None
+    return {g["game"]: int(g["plays"]) for g in data.get("games", [])}, data
+
+
+def work_id(meta):
+    """works/keshikasu/ → keshikasu"""
+    return meta["path"].strip("/").split("/")[-1]
+
+
+def plays_script(works):
+    """遊ぶリンク（例：/keshikasu/）→ 作品 ID の対応表を持たせて plays.js を読み込む"""
+    games = {"/" + w["game_url"]: work_id(w) for w in works}
+    attr = html.escape(json.dumps(games, ensure_ascii=False, separators=(",", ":")), quote=True)
+    return f'<script src="/assets/plays.js" data-games="{attr}" defer></script>\n'
+
+
+def sort_by_plays(body, plays):
+    """data-sort="plays" の中の <li>/<tr> を、最初の /works/<id>/ のリンクの回数が多い順に（安定ソート）"""
+    if not plays:
+        return body
+
+    def key(item):
+        m = re.search(r'href="/works/([a-z0-9-]+)/"', item)
+        return -plays.get(m.group(1), 0) if m else 0
+
+    def sort_block(m):
+        inner = m.group(3)
+        items = list(re.finditer(r"<(li|tr)\b.*?</\1>", inner, re.S))
+        if len(items) < 2:
+            return m.group(0)
+        # 項目の間の空白・改行はそのまま、項目だけを入れ替える
+        ordered = sorted((i.group(0) for i in items), key=key)
+        out, last = [], 0
+        for i, new in zip(items, ordered):
+            out.append(inner[last:i.start()] + new)
+            last = i.end()
+        out.append(inner[last:])
+        return m.group(1) + "".join(out) + m.group(4)
+
+    return re.sub(r'(<(ul|tbody)\b[^>]*\bdata-sort="plays"[^>]*>)(.*?)(</\2>)', sort_block, body, flags=re.S)
+
+
+def plays_note(data):
+    if not data or not data.get("games"):
+        return ""
+    return '<p class="small muted">直近30日に遊ばれた回数の多い順に並べています。</p>'
+
+
 def expand(body, meta, articles, works=()):
+    plays, data = load_plays()
+    body = sort_by_plays(body, plays)
+    note = plays_note(data)
+    body = re.sub(r"\n[ \t]*<!-- PLAYS_NOTE -->", lambda m: m.group(0).replace("<!-- PLAYS_NOTE -->", note) if note else "", body)
     body = re.sub(r"<!-- ARTICLES(?::(\d+))? -->", lambda m: article_list(articles, int(m.group(1)) if m.group(1) else None), body)
     if meta.get("date"):
         d = meta["date"]
@@ -243,7 +308,7 @@ REDIRECT = """<!doctype html>
 """
 
 
-def render(meta, body, titles):
+def render(meta, body, titles, works=()):
     path = meta.get("path", "")
     title = meta["title"] if not path else f"{meta['title']} | shinpoyo"
     nav = "\n".join(
@@ -259,7 +324,7 @@ def render(meta, body, titles):
         nav=nav,
         jsonld=jsonld(meta, titles),
     )
-    return head + body.strip() + "\n" + FOOT
+    return head + body.strip() + "\n" + FOOT.replace("{plays_script}", plays_script(works))
 
 
 def main():
@@ -280,7 +345,7 @@ def main():
         body = expand(body, meta, articles, works)
         out = ROOT / meta.get("path", "") / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(render(meta, body, titles), encoding="utf-8")
+        out.write_text(render(meta, body, titles, works), encoding="utf-8")
         lastmod[SITE + meta.get("path", "")] = max(meta["modified"], meta.get("date", ""))
         print("wrote", out.relative_to(ROOT))
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
