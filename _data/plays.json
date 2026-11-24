@@ -1,0 +1,15 @@
+{
+  "days": 30,
+  "from": "2026-10-26",
+  "to": "2026-11-24",
+  "games": [
+    {
+      "game": "alchemerge-defense",
+      "plays": 1
+    },
+    {
+      "game": "mashimashida",
+      "plays": 1
+    }
+  ]
+}
