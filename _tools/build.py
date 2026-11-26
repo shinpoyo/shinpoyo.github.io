@@ -285,7 +285,8 @@ def expand(body, meta, articles, works=()):
             line += f'　／　ゲームの最終更新：<time datetime="{u}">{u.replace("-", ".")}</time>'
         line += "</p>"
         body = body.replace("</h1>", "</h1>\n  " + line, 1)
-        body = insert_before_nth_h2(body, 2, AD_SLOT)
+        if meta.get("ads") != "none":  # 子ども向けの作品などは広告を置かない
+            body = insert_before_nth_h2(body, 2, AD_SLOT)
         tail = share_links(meta, "この作品をシェア") + "\n" + other_works(meta, works) + "\n"
         last_ad = body.rfind('<aside class="ad"')
         at = last_ad if last_ad >= 0 else body.rfind("</main>")
