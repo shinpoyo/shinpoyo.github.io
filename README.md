@@ -37,6 +37,7 @@ python3 _tools/make_icons.py   # アイコン（favicon.ico など）を作り�
 - Search Console の確認手順：[docs/search-console.md](docs/search-console.md)
 - アルケマージ・ディフェンス（ゲーム本体は別リポジトリ [alchemerge_defense](https://github.com/shinpoyo/alchemerge_defense)。紹介ページは `_src/35-alchemerge-defense.html`）
 - ゲームのレビューと改善点（2026-10-27）：[docs/game-review-2026-10-27.md](docs/game-review-2026-10-27.md)
+- サイトを育てる施策（2026-11-26）：[docs/growth-plan-2026-11.md](docs/growth-plan-2026-11.md)
 - 作業履歴：[docs/worklog.md](docs/worklog.md)
 
 © 2026 shinpoyo. All rights reserved.
