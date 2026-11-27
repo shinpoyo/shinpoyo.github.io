@@ -39,15 +39,16 @@
   </nav>
 </div></header>
 <main class="narrow">
-  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/works/">作品</a> › はるしねーちゃん</p>
-  <h1>はるしねーちゃん</h1>
-  <p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>　／　ゲームの最終更新：<time datetime="2026-11-13">2026.11.13</time></p>
-  <p class="small muted">下のゲームを、このページでそのまま遊べます。</p>
-  <div class="game-embed">
-    <iframe src="/haru_nechan_quiz_app/" title="はるしねーちゃん（ゲーム）" loading="lazy" allow="autoplay; fullscreen"></iframe>
+    <div class="game-embed game-first">
+    <a class="game-cover" href="/haru_nechan_quiz_app/" style="--cover:url(/assets/img/haru-nechan-quiz.jpg)" aria-label="はるしねーちゃんを遊ぶ"><img src="/assets/img/haru-nechan-quiz.jpg" alt="" width="1280" height="720"><span class="play" aria-hidden="true"></span><span class="label">ここを押して遊ぶ</span></a>
+    <iframe data-src="/haru_nechan_quiz_app/" title="はるしねーちゃん（ゲーム）" allow="autoplay; fullscreen"></iframe>
   </div>
   <p class="game-embed-links"><span>🔊 音が出ます。音量にご注意ください</span><a href="/haru_nechan_quiz_app/">ゲームだけを大きい画面で遊ぶ ›</a></p>
   <noscript><p class="note">ゲームの表示には JavaScript が必要です。<a href="/haru_nechan_quiz_app/">こちらから遊べます</a>。</p></noscript>
+  <script src="/assets/game-embed.js" defer></script>
+  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/works/">作品</a> › はるしねーちゃん</p>
+  <h1>はるしねーちゃん</h1>
+  <p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>　／　ゲームの最終更新：<time datetime="2026-11-13">2026.11.13</time></p>
 
   <p class="lead">ねーちゃん（春野 詩音）は、雑学を語るのが大好きです。でもその話には、うろ覚えや思い込み、つまり「ハルシネーション」が混ざっています。スマホでこっそり裏取りして、ねーちゃんの話が「嘘」か「ホント」かを見破るクイズです。立ち絵とセリフ窓で進む、ノベルゲーム風の作りです。</p>
   <p class="note"><strong>ベータ版です。</strong>最後まで遊べます。調整を続けているので、内容や演出が変わることがあります。</p>

@@ -144,6 +144,21 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
   .game-embed-links { margin-left: 0; margin-right: 0; }
 }
 
+/* ゲームを先頭に置く作品ページ：画面の高さいっぱいにゲーム、説明はその下（_tools/build.py の game_first） */
+.game-first { position: relative; margin-top: 0; }
+.game-first iframe { height: max(520px, min(860px, calc(100svh - var(--head, 64px) - 8px))); }
+.game-first iframe:not([src]) { display: none; }
+.game-cover { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; height: max(520px, min(860px, calc(100svh - var(--head, 64px) - 8px))); overflow: hidden; color: #fff; text-decoration: none; background: #1c1c1c; isolation: isolate; }
+.game-cover::before { content: ""; position: absolute; inset: -24px; background: var(--cover) center / cover no-repeat; filter: blur(18px) brightness(.45); z-index: -1; }
+.game-cover img { width: min(88%, 460px); height: auto; border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.45); }
+.game-cover .play { width: 96px; height: 96px; border-radius: 50%; border: 6px solid #fff; display: grid; place-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+.game-cover .play::after { content: ""; margin-left: 8px; border-style: solid; border-width: 22px 0 22px 36px; border-color: transparent transparent transparent #fff; }
+.game-cover .label { font-size: 22px; font-weight: 700; letter-spacing: .04em; text-shadow: 0 2px 8px rgba(0,0,0,.5); }
+.game-cover:hover .play, .game-cover:focus-visible .play { transform: scale(1.06); }
+.game-first.playing .game-cover { display: none; }
+.game-first.playing iframe { display: block; }
+@media (max-width: 560px) { .game-first { margin-top: -1px; } }
+
 /* 作品ページの「作った人・最終更新」 */
 .byline { margin: -4px 0 14px; }
 

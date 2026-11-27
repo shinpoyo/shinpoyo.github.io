@@ -39,15 +39,16 @@
   </nav>
 </div></header>
 <main class="narrow">
-  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/works/">作品</a> › ねーちゃんとオセロ</p>
-  <h1>ねーちゃんとオセロ</h1>
-  <p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>　／　ゲームの最終更新：<time datetime="2026-10-27">2026.10.27</time></p>
-  <p class="small muted">下のゲームを、このページでそのまま遊べます。</p>
-  <div class="game-embed">
-    <iframe src="/Reversi-with-Sis/" title="ねーちゃんとオセロ（ゲーム）" loading="lazy" allow="autoplay; fullscreen"></iframe>
+    <div class="game-embed game-first">
+    <a class="game-cover" href="/Reversi-with-Sis/" style="--cover:url(/assets/img/sis-othello.jpg)" aria-label="ねーちゃんとオセロを遊ぶ"><img src="/assets/img/sis-othello.jpg" alt="" width="1280" height="720"><span class="play" aria-hidden="true"></span><span class="label">ここを押して遊ぶ</span></a>
+    <iframe data-src="/Reversi-with-Sis/" title="ねーちゃんとオセロ（ゲーム）" allow="autoplay; fullscreen"></iframe>
   </div>
   <p class="game-embed-links"><span>🔊 音が出ます。音量にご注意ください</span><a href="/Reversi-with-Sis/">ゲームだけを大きい画面で遊ぶ ›</a></p>
   <noscript><p class="note">ゲームの表示には JavaScript が必要です。<a href="/Reversi-with-Sis/">こちらから遊べます</a>。</p></noscript>
+  <script src="/assets/game-embed.js" defer></script>
+  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/works/">作品</a> › ねーちゃんとオセロ</p>
+  <h1>ねーちゃんとオセロ</h1>
+  <p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>　／　ゲームの最終更新：<time datetime="2026-10-27">2026.10.27</time></p>
 
   <p class="lead">姉ちゃんとオセロで対戦して、機嫌を損ねないように勝つゲームです。ふつうに勝つだけでは足りません。取りすぎると姉ちゃんのイライラ度が上がり、100%になるとちゃぶ台返しでゲームオーバー。お茶を出し、褒め、ときには負けたふりをして、ギリギリの接戦に持ち込みましょう。</p>
   <p class="note"><strong>ベータ版です。</strong>最後まで遊べます。調整を続けているので、内容や演出が変わったり、不具合が残っていたりすることがあります。</p>
