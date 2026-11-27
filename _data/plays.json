@@ -1,7 +1,7 @@
 {
   "days": 30,
-  "from": "2026-10-28",
-  "to": "2026-11-26",
+  "from": "2026-10-29",
+  "to": "2026-11-27",
   "games": [
     {
       "game": "alchemerge-defense",
@@ -10,6 +10,10 @@
     {
       "game": "mashimashida",
       "plays": 2
+    },
+    {
+      "game": "mogumogu-camera",
+      "plays": 1
     },
     {
       "game": "smudge",
