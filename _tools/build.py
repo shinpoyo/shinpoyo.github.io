@@ -302,6 +302,7 @@ def expand(body, meta, articles, works=()):
         body = body.replace("<!-- MORE -->", more)
         body = insert_before_nth_h2(body, 3, AD_SLOT)
     if meta.get("game_url"):
+        body = game_first(body, meta)
         line = '<p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>'
         if meta.get("updated"):
             u = meta["updated"]
@@ -315,6 +316,42 @@ def expand(body, meta, articles, works=()):
         at = last_ad if last_ad >= 0 else body.rfind("</main>")
         body = body[:at] + tail + "  " + body[at:]
     return body
+
+
+EMBED_RE = re.compile(
+    r'\n[ \t]*<p class="small muted">下のゲームを、このページでそのまま遊べます。</p>'
+    r'|(\n[ \t]*<div class="game-embed">.*?</div>\n[ \t]*<p class="game-embed-links">.*?</p>(?:\n[ \t]*<noscript>.*?</noscript>)?)',
+    re.S,
+)
+
+
+def game_first(body, meta):
+    """埋め込みのある作品ページは、ゲームをページの一番上（パンくずより上）に置き、説明はその下に続ける。
+    iframe はすぐには読み込まず、作品の画像に「ここを押して遊ぶ」を重ねた表紙を出す（押したら読み込む）"""
+    block = []
+
+    def take(m):
+        if m.group(1):
+            block.append(m.group(1).strip("\n"))
+        return ""
+
+    body = EMBED_RE.sub(take, body)
+    if not block:
+        return body
+    embed = block[0]
+    m = re.search(r'<iframe src="([^"]+)" title="([^"]+)"', embed)
+    game_url, title = m.group(1), m.group(2)
+    name = html.escape(crumb_name(meta))
+    image = "/" + meta.get("image", "assets/img/ogp.jpg")
+    cover = (
+        f'<a class="game-cover" href="{game_url}" style="--cover:url({image})" aria-label="{name}を遊ぶ">'
+        f'<img src="{image}" alt="" width="1280" height="720">'
+        f'<span class="play" aria-hidden="true"></span><span class="label">ここを押して遊ぶ</span></a>'
+    )
+    embed = embed.replace(f'<iframe src="{game_url}"', f'{cover}\n    <iframe data-src="{game_url}"', 1)
+    embed = embed.replace(' loading="lazy"', "", 1).replace('<div class="game-embed">', '<div class="game-embed game-first">', 1)
+    script = '\n  <script src="/assets/game-embed.js" defer></script>'
+    return re.sub(r"(<main[^>]*>\n)", lambda mm: mm.group(1) + "  " + embed + script + "\n", body, count=1)
 
 
 REDIRECT = """<!doctype html>

@@ -39,15 +39,16 @@
   </nav>
 </div></header>
 <main class="narrow">
-  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/works/">作品</a> › SMUDGE</p>
-  <h1>SMUDGE</h1>
-  <p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>　／　ゲームの最終更新：<time datetime="2026-10-27">2026.10.27</time></p>
-  <p class="small muted">下のゲームを、このページでそのまま遊べます。</p>
-  <div class="game-embed">
-    <iframe src="/smudge/" title="SMUDGE（ゲーム）" loading="lazy" allow="autoplay; fullscreen"></iframe>
+    <div class="game-embed game-first">
+    <a class="game-cover" href="/smudge/" style="--cover:url(/assets/img/smudge.jpg)" aria-label="SMUDGEを遊ぶ"><img src="/assets/img/smudge.jpg" alt="" width="1280" height="720"><span class="play" aria-hidden="true"></span><span class="label">ここを押して遊ぶ</span></a>
+    <iframe data-src="/smudge/" title="SMUDGE（ゲーム）" allow="autoplay; fullscreen"></iframe>
   </div>
   <p class="game-embed-links"><span>ゲームが表示されないときは、右のリンクから開いてください</span><a href="/smudge/">ゲームだけを大きい画面で遊ぶ ›</a></p>
   <noscript><p class="note">ゲームの表示には JavaScript が必要です。<a href="/smudge/">こちらから遊べます</a>。</p></noscript>
+  <script src="/assets/game-embed.js" defer></script>
+  <p class="breadcrumb"><a href="/">トップ</a> › <a href="/works/">作品</a> › SMUDGE</p>
+  <h1>SMUDGE</h1>
+  <p class="muted small byline">作った人：<a href="/about/">shinpoyo</a>　／　ゲームの最終更新：<time datetime="2026-10-27">2026.10.27</time></p>
 
   <p class="lead">画面に残った指の脂の跡。それだけを手がかりに、そこで引かれたロック解除パターンを一筆で引き直す推理パズルです。当てずっぽうでは解けません。跡を正しく読めば、答えは必ず1通りに決まります。</p>
   <img class="hero-img" src="/assets/img/smudge.jpg" alt="SMUDGE の盤面。点の並んだガラスに、指でなぞった跡が光って残っている" width="1280" height="720">
