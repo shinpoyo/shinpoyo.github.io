@@ -230,22 +230,45 @@ def plays_script(works):
     return f'<script src="/assets/plays.js" data-games="{attr}" defer></script>\n'
 
 
-def sort_by_plays(body, plays):
-    """data-sort="plays" の中の <li>/<tr> を、最初の /works/<id>/ のリンクの回数が多い順に（安定ソート）"""
-    if not plays:
+def new_work_ids(works, today=None):
+    """紹介ページの new_until:（YYYY-MM-DD）が今日以降の作品 ID。新作は回数が少なくても先頭に出す"""
+    today = today or date.today().isoformat()
+    return {work_id(w) for w in works if w.get("new_until", "") >= today}
+
+
+NEW_TAG = '<span class="tag new">新作</span>'
+
+
+def mark_new(item, new_ids):
+    """新作のカード（<li>）に「新作」の札を付ける。表の行（<tr>）には付けない"""
+    m = re.search(r'href="/works/([a-z0-9-]+)/"', item)
+    if not item.startswith("<li") or not m or m.group(1) not in new_ids or NEW_TAG in item:
+        return item
+    if '<div class="tags">' in item:
+        return item.replace('<div class="tags">', '<div class="tags">' + NEW_TAG, 1)
+    return re.sub(r"(</h3>)", r'\1<div class="tags">' + NEW_TAG + "</div>", item, count=1)
+
+
+def sort_by_plays(body, plays, new_ids=frozenset()):
+    """data-sort="plays" の中の <li>/<tr> を、新作 → 最初の /works/<id>/ のリンクの回数が多い順に（安定ソート）"""
+    if not plays and not new_ids:
         return body
 
     def key(item):
         m = re.search(r'href="/works/([a-z0-9-]+)/"', item)
-        return -plays.get(m.group(1), 0) if m else 0
+        if not m:
+            return (1, 0)
+        return (0 if m.group(1) in new_ids else 1, -plays.get(m.group(1), 0))
 
     def sort_block(m):
         inner = m.group(3)
         items = list(re.finditer(r"<(li|tr)\b.*?</\1>", inner, re.S))
         if len(items) < 2:
-            return m.group(0)
+            if not items:
+                return m.group(0)
+            return m.group(1) + inner.replace(items[0].group(0), mark_new(items[0].group(0), new_ids)) + m.group(4)
         # 項目の間の空白・改行はそのまま、項目だけを入れ替える
-        ordered = sorted((i.group(0) for i in items), key=key)
+        ordered = [mark_new(x, new_ids) for x in sorted((i.group(0) for i in items), key=key)]
         out, last = [], 0
         for i, new in zip(items, ordered):
             out.append(inner[last:i.start()] + new)
@@ -264,7 +287,7 @@ def plays_note(data):
 
 def expand(body, meta, articles, works=()):
     plays, data = load_plays()
-    body = sort_by_plays(body, plays)
+    body = sort_by_plays(body, plays, new_work_ids(works))
     note = plays_note(data)
     body = re.sub(r"\n[ \t]*<!-- PLAYS_NOTE -->", lambda m: m.group(0).replace("<!-- PLAYS_NOTE -->", note) if note else "", body)
     body = re.sub(r"<!-- ARTICLES(?::(\d+))? -->", lambda m: article_list(articles, int(m.group(1)) if m.group(1) else None), body)
