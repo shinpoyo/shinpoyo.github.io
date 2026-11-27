@@ -28,6 +28,7 @@ python3 _tools/make_icons.py   # アイコン（favicon.ico など）を作り�
 - 構造化データ（JSON-LD）・パンくず・sitemap の lastmod・記事のシェアリンクは自動で付く。作品ページは `game_url:` `genre:` を書くと作品（VideoGame）として扱われる
 - 新作は紹介ページに `new_until: YYYY-MM-DD` を書くと、その日まで一覧の先頭に「新作」の札つきで並ぶ（遊ばれた回数の順より優先。毎日の自動並べ替えで外れる）
 - 子ども向けなど広告を置かない作品ページは `ads: none`
+- パソコンでしか遊べない作品は紹介ページに `pc_only: キーボード` のように「何で遊ぶか」を書くと、スマホで「遊ぶ」を押したときに確認が出る（`assets/pc-only.js`）。紹介ページの本文には `<p class="note touch-only">` でスマホのときだけ出る注意を書く
 - 作品ページに `<div class="game-embed">`（iframe）を書くと、ビルドでページの一番上に移り、「ここを押して遊ぶ」の表紙が付く（押すまでゲームは読み込まない。`assets/game-embed.js`）
 
 ## ドキュメント

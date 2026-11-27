@@ -191,3 +191,14 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
 .seg.pending span { color: var(--muted); }
 .seg.bad span, .ng { color: #ef4444; }
 .ok { color: #22c55e; }
+
+/* PC 向けの作品をスマホで開こうとしたときの確認（assets/pc-only.js） */
+.pc-only-dialog { max-width: min(420px, calc(100vw - 32px)); border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: var(--bg); color: var(--text); }
+.pc-only-dialog::backdrop { background: rgba(0,0,0,.5); }
+.pc-only-title { font-weight: 700; font-size: 18px; margin: 0 0 8px; }
+.pc-only-text { margin: 0 0 16px; }
+.pc-only-actions { display: flex; flex-direction: column; gap: 10px; }
+.pc-only-actions .btn { justify-content: center; }
+.pc-only-close { background: none; border: 0; color: var(--muted); font: inherit; padding: 8px; cursor: pointer; }
+.touch-only { display: none; }
+@media (hover: none) and (pointer: coarse) { .touch-only { display: block; } }

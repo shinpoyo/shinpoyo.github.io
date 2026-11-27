@@ -227,7 +227,13 @@ def plays_script(works):
     """遊ぶリンク（例：/keshikasu/）→ 作品 ID の対応表を持たせて plays.js を読み込む"""
     games = {"/" + w["game_url"]: work_id(w) for w in works}
     attr = html.escape(json.dumps(games, ensure_ascii=False, separators=(",", ":")), quote=True)
-    return f'<script src="/assets/plays.js" data-games="{attr}" defer></script>\n'
+    tag = f'<script src="/assets/plays.js" data-games="{attr}" defer></script>\n'
+    # PC でしか遊べない作品（紹介ページに pc_only: と書いたもの）。スマホで「遊ぶ」を押したら確認を出す
+    pc = {"/" + w["game_url"]: {"name": crumb_name(w), "need": w["pc_only"]} for w in works if w.get("pc_only")}
+    if pc:
+        attr = html.escape(json.dumps(pc, ensure_ascii=False, separators=(",", ":")), quote=True)
+        tag += f'<script src="/assets/pc-only.js" data-games="{attr}" defer></script>\n'
+    return tag
 
 
 def new_work_ids(works, today=None):
